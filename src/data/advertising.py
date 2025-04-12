@@ -51,7 +51,7 @@ class Advertising(Dataset):
         self.targets_sigma = 0.5
         self.evaluation_offline = False
         self.test_data = self.sample_data(10000, 0)
-        self.logging_scale = 0.3
+        self.logging_scale = 0.1
         self.parameter_scale = 1
         self.start = 0
         self.param_dimension = (3, 1)
@@ -80,7 +80,6 @@ class Advertising(Dataset):
             targets[y == y_value] = group[y == y_value]
 
         return np.abs(targets)
-
 
     def sample_logging_actions(self, n_samples):
         actions = self.rng.normal(

@@ -6,8 +6,8 @@ from estimators.base import Estimator
 from policies.base import Policy
 
 
-class ImportanceSamplingEstimator(Estimator):
-    """Estimator for the classical Multiple importance sampling method
+class POEM(Estimator):
+    """Estimator using a penalized importance sampling method
 
     Args:
         BaseEstimator (object): Base class for all estimators
@@ -18,13 +18,8 @@ class ImportanceSamplingEstimator(Estimator):
     ):
 
         super().__init__(policy, clipping_parameter, lambda_, variance_penalty)
-        # Add any additional initialization code here
 
-    def loss_function(
-        self,
-        policy,
-        actions, contexts, losses, logged_propensities
-    ):
+    def loss_function(self, policy, actions, contexts, losses, logged_propensities):
         """return the loss function for the mixture estimator
 
         Args:
@@ -45,3 +40,12 @@ class ImportanceSamplingEstimator(Estimator):
         )
 
         return self.objective_function(estimates)
+
+    def objective_function(self, estimate):
+        if self.variance_penalty:
+
+            return jnp.mean(estimate) + self.lambda_ * jnp.sqrt(
+                jnp.sum(jnp.cov(estimate))
+            )
+        else:
+            return jnp.mean(estimate)

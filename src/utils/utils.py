@@ -19,6 +19,18 @@ def display_experiment(random_seed, dataset, name):
     )
 
 
+def display_metrics(offline_loss, online_loss, regret):
+    print(
+        "***",
+        "Offline loss: ",
+        offline_loss,
+        "Online loss: %f" % online_loss,
+        "Regret: %f" % regret,
+        "***",
+        file=sys.stderr,
+    )
+
+
 def get_logging_data(n_samples, dataset):
 
     actions, contexts, losses, propensities, potentials = dataset.sample_logged_data(
@@ -50,6 +62,7 @@ def dataset_split(contexts, actions, losses, propensities, random_seed, ratio=0.
     logged_valid = actions_valid, contexts_valid, losses_valid, propensities_valid
 
     return logged_train, logged_valid
+
 
 def online_evaluation(optimized_param, contextual_modelling, dataset, random_seed):
 

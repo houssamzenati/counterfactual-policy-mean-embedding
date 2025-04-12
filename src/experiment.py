@@ -12,7 +12,7 @@ sys.path.append(base_dir)
 
 print(base_dir)
 
-from utils.utils import display_experiment, dataset_split, online_evaluation
+from utils.utils import display_experiment, display_metrics, online_evaluation
 from policies.models.contextual import ContextualModel
 from utils.loader import (
     get_data_by_name,
@@ -78,11 +78,11 @@ def experiment(args):
         settings["n_0"]
     )
 
-    print("Optimizing policy")
-    optimized_theta, loss_crm = estimator.optimize(
+    print("Optimizing policy...")
+    optimized_theta, offline_loss = estimator.optimize(
         actions, contexts, losses, propensities, seed=42
     )
-    print("Policy is optimized")
+    print("***Policy is optimized!***")
     optimized_theta_val = optimized_theta._value
 
     online_loss = online_evaluation(
@@ -100,9 +100,9 @@ def experiment(args):
     # else:
     #     pi0, pistar = make_baselines_skylines(data.X_train, data.y_train)
     #     optimal_loss = data.online_evaluation_star(pistar)
-    loss_crm = loss_crm._value
+    offline_loss = offline_loss._value
     regret = online_loss - optimal_loss
-    print(regret)
+    display_metrics(offline_loss, online_loss, regret)
 
 
 if __name__ == "__main__":

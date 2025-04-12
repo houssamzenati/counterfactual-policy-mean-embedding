@@ -67,14 +67,9 @@ class Estimator(object):
                 b = jnp.clip(a, -50, 50)
                 return jnp.exp(b)
 
+    @abstractmethod
     def objective_function(self, estimate):
-        if self.variance_penalty:
-
-            return jnp.mean(estimate) + self.lambda_ * jnp.sqrt(
-                jnp.sum(jnp.cov(estimate))
-            )
-        else:
-            return jnp.mean(estimate)
+        pass
 
     def optimize(
         self,

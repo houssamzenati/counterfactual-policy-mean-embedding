@@ -4,7 +4,8 @@ from data.pricing import Pricing
 # from data.tmc2007 import tmc2007
 # from data.yeast import yeast
 
-from estimators.poem import ImportanceSamplingEstimator
+from estimators.poem import POEM
+from estimators.cpme import CPME
 
 from policies.continuous import ContinuousPolicy
 from policies.discrete import DiscretePolicy
@@ -31,8 +32,8 @@ def get_data_by_name(name, random_seed=42):
 
 
 dic_estimator = {
-    "poem": ImportanceSamplingEstimator,
-    "cpme": ImportanceSamplingEstimator,
+    "poem": POEM,
+    "cpme": CPME,
 }
 
 
