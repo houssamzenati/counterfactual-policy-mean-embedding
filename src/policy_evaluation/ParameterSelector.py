@@ -69,34 +69,35 @@ class ParameterSelector(object):
 
         with joblib.Parallel(n_jobs=num_params, max_nbytes=1e6) as parallel:
 
-            for train, test in kfold.split(np.zeros(num_data), data.logging_reward):
+            for train, test in kfold.split(np.zeros(num_data), data.null_reward):
 
                 # split the data
-                new_data = pd.concat([pd.DataFrame({'logging_reward': data.logging_reward.iloc[train],
-                                                    'logging_context_vec': data.logging_context_vec.iloc[train],
-                                                    'logging_reco_vec': data.logging_reco_vec.iloc[train],
-                                                    'logging_reco': data.logging_reco.iloc[train],
-                                                    'logging_multinomial': data.logging_multinomial.iloc[train]}),
-                                      pd.DataFrame({'target_context_vec': data.logging_context_vec.iloc[test],
-                                                    'target_reco_vec': data.logging_reco_vec.iloc[test],
-                                                    'target_reco': data.logging_reco.iloc[test],
+                new_data = pd.concat([pd.DataFrame({'null_reward': data.null_reward.iloc[train],
+                                                    'null_context_vec': data.null_context_vec.iloc[train],
+                                                    'null_reco_vec': data.null_reco_vec.iloc[train],
+                                                    'null_reco': data.null_reco.iloc[train],
+                                                    'null_multinomial': data.null_multinomial.iloc[train]}),
+                                      pd.DataFrame({'target_context_vec': data.null_context_vec.iloc[test],
+                                                    'target_reco_vec': data.null_reco_vec.iloc[test],
+                                                    'target_reco': data.null_reco.iloc[test],
                                                     'target_multinomial': data.target_multinomial.iloc[test]})],
                                      axis=1)
-                
+
                 # evaluate the estimator on each split
                 validate_data = data.iloc[test]
-                validate_reward = data["logging_reward"].iloc[test].values
-                print(null_policy)
-                nullProb = [null_policy.get_propensity(row.logging_context_vec, row.logging_reco[0]) for _,row in validate_data.iterrows()]
+                validate_reward = data["null_reward"].iloc[test].values
+
+                nullProb = [null_policy.get_propensity(row.null_multinomial, row.null_reco) for _,row in validate_data.iterrows()]
                 if not target_policy.greedy:
-                    targetProb = [target_policy.get_propensity(row.target_multinomial, row.logging_reco) for _,row in validate_data.iterrows()]
+                    targetProb = [target_policy.get_propensity(row.target_multinomial, row.null_reco) for _,row in validate_data.iterrows()]
                 else:
-                    targetProb = [1.0 if row.logging_reco == row.target_reco else 0 for _,row in validate_data.iterrows()]
+                    targetProb = [1.0 if row.null_reco == row.target_reco else 0 for _,row in validate_data.iterrows()]
 
                 ips_w = np.divide(targetProb, nullProb)
                 actual_value = np.mean(ips_w * validate_reward) / np.mean(ips_w)
 
-                estimated_values = parallel(joblib.delayed(e.estimate)(new_data) for e in estimators)
+                # estimated_values = parallel(joblib.delayed(e.estimate)(new_data) for e in estimators)
+                estimated_values = [e.estimate(new_data) for e in estimators]
                 errors += [(est - actual_value) ** 2 for est in estimated_values]
 
             errors /= n_splits
