@@ -13,25 +13,21 @@ import copy
 The class for selecting the best parameters of the reward estimators
 """
 
-from sklearn.model_selection import KFold
-
-
 class ParameterSelector(object):
-    """A Class for Parameter Selection"""
 
-    def __init__(self, estimator=None, n_splits=5):
+    """ A Class for Parameter Selection """
+
+    def __init__(self, estimator=None):
         self._estimator = estimator
         self._parameters = None
         self._score = None
-        self.parameters = None
-        self.n_splits = n_splits 
 
     @property
     def name(self):
         if self.estimator is None:
-            return "Empty ParameterSelector"
+            return "Empty ParamterSelector"
         else:
-            return "".join(["ParameterSelector for ", self.estimator.name])
+            return "".join["ParameterSelector for ", self.estimator.name]
 
     @property
     def estimator(self):
@@ -57,81 +53,58 @@ class ParameterSelector(object):
     def estimator(self, value):
         self._estimator = value
 
-    def select_from_propensity(
-        self, sim_data, params_grid, logging_policy, target_policy
-    ):
-        X = np.vstack(sim_data["logging_reco_vec"].values)
-        y = sim_data["logging_reward"].values
+    def select_from_propensity(self, data, params_grid, null_policy, target_policy, n_splits=5):
+        """ Select the best parameter using the propensity score """
 
-        best_mse = np.inf
-        best_params = None
+        num_params = len(params_grid)
+        num_data = len(data)
 
-        kf = KFold(n_splits=self.n_splits, shuffle=True, random_state=42)
+        kfold = StratifiedKFold(n_splits=n_splits)
+        errors = np.zeros(num_params)
 
-        for params in params_grid:
-            try:
-                fold_mse = []
+        # create estimators using parameter grid
+        estimators = [copy.deepcopy(self.estimator) for _ in params_grid]
+        for params, e in zip(params_grid, estimators):
+            e.params = params
 
-                for train_index, test_index in kf.split(X):
-                    X_train, X_test = X[train_index], X[test_index]
-                    y_train, y_test = y[train_index], y[test_index]
+        with joblib.Parallel(n_jobs=num_params, max_nbytes=1e6) as parallel:
 
-                    if isinstance(self.estimator, DirectEstimator):
-                        n_hidden_units, batch_size, epochs = params
-                        self.estimator.fit(
-                            X_train,
-                            y_train,
-                            n_hidden_units=n_hidden_units,
-                            batch_size=batch_size,
-                            epochs=epochs,
-                        )
-                        pred_rewards = self.estimator.model.predict(
-                            X_test, batch_size=256, verbose=0
-                        )
-                        mse = np.mean((pred_rewards.flatten() - y_test) ** 2)
+            for train, test in kfold.split(np.zeros(num_data), data.logging_reward):
 
-                    elif isinstance(self.estimator, CMEstimator) or isinstance(
-                        self.estimator, DRCMEstimator
-                    ):
-                        reg_param, context_bw, reco_bw = params
-                        self.estimator.params = [reg_param, context_bw, reco_bw]
-                        pred_rewards = np.full_like(
-                            y_test, np.mean(y_train)
-                        )  # Dummy prediction
-                        mse = np.mean((pred_rewards.flatten() - y_test) ** 2)
+                # split the data
+                new_data = pd.concat([pd.DataFrame({'logging_reward': data.logging_reward.iloc[train],
+                                                    'logging_context_vec': data.logging_context_vec.iloc[train],
+                                                    'logging_reco_vec': data.logging_reco_vec.iloc[train],
+                                                    'logging_reco': data.logging_reco.iloc[train],
+                                                    'logging_multinomial': data.logging_multinomial.iloc[train]}),
+                                      pd.DataFrame({'target_context_vec': data.logging_context_vec.iloc[test],
+                                                    'target_reco_vec': data.logging_reco_vec.iloc[test],
+                                                    'target_reco': data.logging_reco.iloc[test],
+                                                    'target_multinomial': data.target_multinomial.iloc[test]})],
+                                     axis=1)
+                
+                # evaluate the estimator on each split
+                validate_data = data.iloc[test]
+                validate_reward = data["logging_reward"].iloc[test].values
+                print(null_policy)
+                nullProb = [null_policy.get_propensity(row.logging_context_vec, row.logging_reco[0]) for _,row in validate_data.iterrows()]
+                if not target_policy.greedy:
+                    targetProb = [target_policy.get_propensity(row.target_multinomial, row.logging_reco) for _,row in validate_data.iterrows()]
+                else:
+                    targetProb = [1.0 if row.logging_reco == row.target_reco else 0 for _,row in validate_data.iterrows()]
 
-                    else:
-                        raise ValueError(
-                            "Unsupported estimator type for parameter selection."
-                        )
+                ips_w = np.divide(targetProb, nullProb)
+                actual_value = np.mean(ips_w * validate_reward) / np.mean(ips_w)
 
-                    fold_mse.append(mse)
+                estimated_values = parallel(joblib.delayed(e.estimate)(new_data) for e in estimators)
+                errors += [(est - actual_value) ** 2 for est in estimated_values]
 
-                avg_mse = np.mean(fold_mse)
+            errors /= n_splits
 
-                if avg_mse < best_mse:
-                    best_mse = avg_mse
-                    best_params = params
+        # update the best parameter setting and the new estimator
+        self.parameters = params_grid[np.argmin(errors)]
+        self.estimator = estimators[np.argmin(errors)]
+        self.score = np.min(errors)
 
-            except Exception as e:
-                continue  # skip params that fail
-
-        if best_params is not None:
-            if isinstance(self.estimator, DirectEstimator):
-                n_hidden_units, batch_size, epochs = best_params
-                self.estimator.fit(
-                    X,
-                    y,
-                    n_hidden_units=n_hidden_units,
-                    batch_size=batch_size,
-                    epochs=epochs,
-                )
-            elif isinstance(self.estimator, CMEstimator) or isinstance(
-                self.estimator, DRCMEstimator
-            ):
-                reg_param, context_bw, reco_bw = best_params
-                self.estimator.params = [reg_param, context_bw, reco_bw]
-            else:
-                raise ValueError("Unsupported estimator type for final assignment.")
-
-            self.parameters = best_params
+    def select_from_covariate_matching(self, data, params_grid):
+        """ Select the best parameter using the covariate matching """

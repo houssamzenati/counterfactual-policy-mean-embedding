@@ -292,3 +292,6 @@ class BehaviorPolicyEstimator:
             full_proba[cls] = proba[cls_idx]
 
         return full_proba[action_index]
+    
+    def get_propensity(self, user_feature, action_indices):
+        return self.predict_proba(user_feature, action_indices)

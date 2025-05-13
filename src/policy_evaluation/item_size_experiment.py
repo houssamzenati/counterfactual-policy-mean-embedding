@@ -164,7 +164,7 @@ config = {
     "n_users": 50,
     "context_dim": 10,
     "n_reco": 4,
-    "n_observation": 5000,
+    "n_observation": 500,
 }
 
 # Running the simulation
