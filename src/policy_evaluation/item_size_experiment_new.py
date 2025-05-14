@@ -22,8 +22,10 @@ import joblib
 import os
 import sys
 
-if not os.path.exists("results"):
-    os.mkdir("results")
+# if not os.path.exists("results"):
+#     os.mkdir("results")
+
+os.makedirs("itemsize_report/results", exist_ok=True)
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
@@ -97,7 +99,6 @@ def compare_estimators(null_policy, target_policy, environment, item_vectors, co
     behavior_estimator = BehaviorPolicyEstimator(config["n_items"])
     user_features = np.vstack(sim_data["null_context_vec"].values)
     actions = [r[0] for r in sim_data["null_reco"].values]  # Taking first item as action
-    print(user_features.shape)
     behavior_estimator.fit(user_features, actions)
 
     reg_pow = -1
@@ -130,7 +131,7 @@ def compare_estimators(null_policy, target_policy, environment, item_vectors, co
     estimators[4] = cme_selector.estimator
 
     estimators[5].params = estimators[4]._params
-    
+
     actual_value = get_actual_reward(target_policy, environment)
 
     estimated_values = dict([(e.name, e.estimate(sim_data)) for e in estimators])
@@ -191,18 +192,18 @@ if __name__ == "__main__":
         #                 CMEstimator(rbf_kernel, rbf_kernel, params)]
 
         seeds = np.random.randint(np.iinfo(np.int32).max, size=num_iter)
-        # compare_df = joblib.Parallel(n_jobs=2, verbose=50)(
-        #     joblib.delayed(compare_estimators)(null_policy, target_policy, environment, item_vectors,
-        #                                     config, seeds[i]) for i in range(num_iter)
-        # )
-        compare_df = [
-            compare_estimators(null_policy, target_policy, environment, item_vectors,
-                            config, seeds[i]) for i in range(num_iter)
-        ]
+        compare_df = joblib.Parallel(n_jobs=2, verbose=50)(
+            joblib.delayed(compare_estimators)(null_policy, target_policy, environment, item_vectors,
+                                            config, seeds[i]) for i in range(num_iter)
+        )
+        # compare_df = [
+        #     compare_estimators(null_policy, target_policy, environment, item_vectors,
+        #                     config, seeds[i]) for i in range(num_iter)
+        # ]
 
         compare_df = pd.DataFrame(compare_df)
         compare_df['num_items'] = num_items
         # result_df = result_df.append(compare_df, ignore_index=True)
         result_df = pd.concat([result_df, compare_df], ignore_index=True)
         # compare_df[list(filter(lambda x: 'error' not in x,compare_df.columns))].plot()
-        result_df.to_csv("results/itemsize_result_%d.csv" % (num_items), index=False)
+        result_df.to_csv("itemsize_report/results/itemsize_result_%d.csv" % (num_items), index=False)
