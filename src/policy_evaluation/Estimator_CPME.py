@@ -105,7 +105,7 @@ class DoublyRobustEstimator(Estimator):
         self.model.fit(features, rewards, batch_size=self.params[1], epochs=self.params[2], verbose=0)
 
     def calculate_weight(self, row):
-        logging_prob = self.behavior_estimator.predict_proba(row.logging_context_vec, row.logging_reco[0])
+        logging_prob = self.behavior_estimator.predict_proba(row.null_context_vec, row.null_reco[0])
         # logging_prob = self.behavior_estimator.get_propensity(row.null_multinomial, row.null_reco)
         if not self.target_policy.greedy:
             target_prob = self.target_policy.get_propensity(row.target_multinomial, row.null_reco)
@@ -157,6 +157,7 @@ class IPSEstimator(Estimator):
     def calculate_weight(self, row):
         logging_prob = self.behavior_estimator.predict_proba(row.null_context_vec, row.null_reco[0])
         if not self.target_policy.greedy:
+            print(row.null_reco)
             target_prob = self.target_policy.get_propensity(row.target_multinomial, row.null_reco)
         else:
             target_prob = 1.0 if row.null_reco == row.target_reco else 0.0
@@ -205,7 +206,7 @@ class CMEbis(Estimator):
         context_param = self.params[1]
         recom_param = self.params[2]
 
-        logging_reward = sim_data.logging_reward.dropna(axis=0)
+        logging_reward = sim_data.null_reward.dropna(axis=0)
 
         logging_context_vec = np.stack(
             sim_data["null_context_vec"].dropna(axis=0).to_numpy()
@@ -274,11 +275,13 @@ class DoublyRobustbis(Estimator):
 
 
     def calculate_weight(self, row):
-        logging_prob = self.behavior_estimator.predict_proba(row.logging_context_vec, row.logging_reco[0])
+        logging_prob = self.behavior_estimator.predict_proba(row.null_context_vec, row.null_reco[0])
+        print(self.behavior_estimator)
         if not self.target_policy.greedy:
-            target_prob = self.target_policy.get_propensity(row.target_multinomial, row.logging_reco)
+            print(row.target_multinomial)
+            target_prob = self.target_policy.get_propensity(row.target_multinomial, row.null_reco)
         else:
-            target_prob = 1.0 if row.logging_reco == row.target_reco else 0.0
+            target_prob = 1.0 if row.null_reco == row.target_reco else 0.0
 
         if logging_prob == 0:
             return 0.0
@@ -295,7 +298,7 @@ class DoublyRobustbis(Estimator):
         context_param = self.params[1]
         recom_param = self.params[2]
 
-        logging_reward = sim_data.logging_reward.dropna(axis=0)
+        logging_reward = sim_data.null_reward.dropna(axis=0)
 
         logging_context_vec = np.stack(
             sim_data["null_context_vec"].dropna(axis=0).to_numpy()

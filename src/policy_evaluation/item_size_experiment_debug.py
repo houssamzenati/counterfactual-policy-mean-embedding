@@ -22,6 +22,9 @@ import joblib
 import os
 import sys
 
+if not os.path.exists("results"):
+    os.mkdir("results")
+
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 def simulate_data(null_policy, target_policy, environment, item_vectors):
@@ -109,21 +112,25 @@ def compare_estimators(null_policy, target_policy, environment, item_vectors, co
                     SlateEstimator(config['n_reco'], null_policy),
                     DirectEstimator(),
                     DoublyRobustEstimator(behavior_estimator, target_policy),
-                    CMEstimator(rbf_kernel, rbf_kernel, params)]
+                    CMEbis(rbf_kernel, rbf_kernel, params),
+                    DoublyRobustbis(rbf_kernel, rbf_kernel, params, behavior_estimator, target_policy)
+                    ]
 
     # parameter selection
-    direct_selector = ParameterSelector(estimators[2])  # direct estimator
+    direct_selector = ParameterSelectorWithBehaviorEstimator(estimators[2])  # direct estimator
     params_grid = [(n_hiddens, 1024, 100) for n_hiddens in [50, 100, 150, 200]]
-    direct_selector.select_from_propensity(sim_data, params_grid, null_policy, target_policy)
+    direct_selector.select_from_propensity(sim_data, params_grid, behavior_estimator, target_policy)
     estimators[2] = direct_selector.estimator
 
     estimators[3].params = direct_selector.parameters  # doubly robust estimator
 
-    cme_selector = ParameterSelector(estimators[4])  # cme estimator
-    params_grid = [[(10.0 ** p) / config['n_observation'], 1.0, 1.0] for p in np.arange(-6, 0, 1)]
-    cme_selector.select_from_propensity(sim_data, params_grid, null_policy, target_policy)
+    cme_selector = ParameterSelectorWithBehaviorEstimator(estimators[4])  # cme estimator
+    params_grid = [[(10.0 ** p) / config['n_observation'], 1.0, 1.0] for p in np.arange(-7, 0, 1)]
+    cme_selector.select_from_propensity(sim_data, params_grid, behavior_estimator, target_policy)
     estimators[4] = cme_selector.estimator
 
+    estimators[5].params = estimators[4]._params
+    
     actual_value = get_actual_reward(target_policy, environment)
 
     estimated_values = dict([(e.name, e.estimate(sim_data)) for e in estimators])
@@ -145,7 +152,7 @@ if __name__ == "__main__":
             "n_users": 50,
             "n_items": num_items,
             "n_reco": 5,
-            "n_observation": 500,
+            "n_observation": 100,
             "context_dim": 10
         }
 
@@ -185,7 +192,7 @@ if __name__ == "__main__":
 
         seeds = np.random.randint(np.iinfo(np.int32).max, size=num_iter)
         # compare_df = joblib.Parallel(n_jobs=2, verbose=50)(
-        #     joblib.delayed(compare_estimators)(estimators, null_policy, target_policy, environment, item_vectors,
+        #     joblib.delayed(compare_estimators)(null_policy, target_policy, environment, item_vectors,
         #                                     config, seeds[i]) for i in range(num_iter)
         # )
         compare_df = [
@@ -198,4 +205,4 @@ if __name__ == "__main__":
         # result_df = result_df.append(compare_df, ignore_index=True)
         result_df = pd.concat([result_df, compare_df], ignore_index=True)
         # compare_df[list(filter(lambda x: 'error' not in x,compare_df.columns))].plot()
-        result_df.to_csv("item_size_report/results/itemsize_result_%d.csv" % (num_items), index=False)
+        result_df.to_csv("results/itemsize_result_%d.csv" % (num_items), index=False)

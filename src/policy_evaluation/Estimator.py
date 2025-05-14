@@ -116,67 +116,67 @@ class DirectEstimator:
 #         return exp_reward / exp_weight
 
 
-class DoublyRobustEstimator(Estimator):
-    def __init__(self, behavior_estimator, target_policy, params=(100, 1024, 100)):
-        self.behavior_estimator = behavior_estimator
-        self.target_policy = target_policy
-        self.params = params
-        self.model = None
+# class DoublyRobustEstimator(Estimator):
+#     def __init__(self, behavior_estimator, target_policy, params=(100, 1024, 100)):
+#         self.behavior_estimator = behavior_estimator
+#         self.target_policy = target_policy
+#         self.params = params
+#         self.model = None
 
-    @property
-    def name(self):
-        return "doubly robust estimator"
+#     @property
+#     def name(self):
+#         return "doubly robust estimator"
 
-    def fit(self, features, rewards):
-        input_dim = features.shape[1]
-        n_hidden_units = self.params[0]
-        self.model = tf.keras.Sequential([
-            tf.keras.layers.Input(shape=(input_dim,)),
-            tf.keras.layers.Dense(n_hidden_units, activation="relu"),
-            tf.keras.layers.Dense(1),
-        ])
-        self.model.compile(optimizer="adam", loss="mse")
-        self.model.fit(features, rewards, batch_size=self.params[1], epochs=self.params[2], verbose=0)
+#     def fit(self, features, rewards):
+#         input_dim = features.shape[1]
+#         n_hidden_units = self.params[0]
+#         self.model = tf.keras.Sequential([
+#             tf.keras.layers.Input(shape=(input_dim,)),
+#             tf.keras.layers.Dense(n_hidden_units, activation="relu"),
+#             tf.keras.layers.Dense(1),
+#         ])
+#         self.model.compile(optimizer="adam", loss="mse")
+#         self.model.fit(features, rewards, batch_size=self.params[1], epochs=self.params[2], verbose=0)
 
-    def calculate_weight(self, row):
-        # logging_prob = self.behavior_estimator.predict_proba(row.logging_context_vec, row.logging_reco[0])
-        logging_prob = self.behavior_estimator.get_propensity(row.null_multinomial, row.null_reco)
-        if not self.target_policy.greedy:
-            target_prob = self.target_policy.get_propensity(row.target_multinomial, row.null_reco)
-        else:
-            target_prob = 1.0 if row.null_reco == row.target_reco else 0.0
+#     def calculate_weight(self, row):
+#         # logging_prob = self.behavior_estimator.predict_proba(row.logging_context_vec, row.logging_reco[0])
+#         logging_prob = self.behavior_estimator.get_propensity(row.null_multinomial, row.null_reco)
+#         if not self.target_policy.greedy:
+#             target_prob = self.target_policy.get_propensity(row.target_multinomial, row.null_reco)
+#         else:
+#             target_prob = 1.0 if row.null_reco == row.target_reco else 0.0
 
-        if logging_prob == 0:
-            return 0.0
-        return np.clip(target_prob / logging_prob, 0, 10)
+#         if logging_prob == 0:
+#             return 0.0
+#         return np.clip(target_prob / logging_prob, 0, 10)
 
-    def estimate(self, sim_data):
-        sim_data = sim_data.copy()
+#     def estimate(self, sim_data):
+#         sim_data = sim_data.copy()
 
-        logging_context_vec = sim_data["null_context_vec"].dropna(axis=0)
-        logging_reco_vec = sim_data["null_reco_vec"].dropna(axis=0)
-        logging_reward = sim_data["null_reward"].dropna(axis=0)
-        target_context_vec = sim_data["target_context_vec"].dropna(axis=0)
-        target_reco_vec = sim_data["target_reco_vec"].dropna(axis=0)
+#         logging_context_vec = sim_data["null_context_vec"].dropna(axis=0)
+#         logging_reco_vec = sim_data["null_reco_vec"].dropna(axis=0)
+#         logging_reward = sim_data["null_reward"].dropna(axis=0)
+#         target_context_vec = sim_data["target_context_vec"].dropna(axis=0)
+#         target_reco_vec = sim_data["target_reco_vec"].dropna(axis=0)
 
-        X_logging = np.hstack([
-            np.vstack(logging_context_vec.values),
-            np.vstack(logging_reco_vec.values)
-        ])
-        X_target = np.hstack([
-            np.vstack(target_context_vec.values),
-            np.vstack(target_reco_vec.values)
-        ])
+#         X_logging = np.hstack([
+#             np.vstack(logging_context_vec.values),
+#             np.vstack(logging_reco_vec.values)
+#         ])
+#         X_target = np.hstack([
+#             np.vstack(target_context_vec.values),
+#             np.vstack(target_reco_vec.values)
+#         ])
 
-        self.fit(X_logging, logging_reward.values)
+#         self.fit(X_logging, logging_reward.values)
 
-        logging_predictions = self.model.predict(X_logging, batch_size=256).flatten()
-        target_predictions = self.model.predict(X_target, batch_size=256).flatten()
+#         logging_predictions = self.model.predict(X_logging, batch_size=256).flatten()
+#         target_predictions = self.model.predict(X_target, batch_size=256).flatten()
 
-        ips_w = sim_data.apply(self.calculate_weight, axis=1)
+#         ips_w = sim_data.apply(self.calculate_weight, axis=1)
 
-        estimated_reward = target_predictions + (logging_reward.values - logging_predictions) * ips_w
-        return np.mean(estimated_reward)
+#         estimated_reward = target_predictions + (logging_reward.values - logging_predictions) * ips_w
+#         return np.mean(estimated_reward)
 
 class SlateEstimator(Estimator):
     @property
