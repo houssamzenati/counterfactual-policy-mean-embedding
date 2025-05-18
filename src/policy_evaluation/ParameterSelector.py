@@ -106,6 +106,7 @@ class ParameterSelector(object):
         self.parameters = params_grid[np.argmin(errors)]
         self.estimator = estimators[np.argmin(errors)]
         self.score = np.min(errors)
+        print("PARAMETER SELECTION IS DONE!")
 
     def select_from_covariate_matching(self, data, params_grid):
         """ Select the best parameter using the covariate matching """

@@ -153,7 +153,7 @@ if __name__ == "__main__":
             "n_users": 50,
             "n_items": num_items,
             "n_reco": 5,
-            "n_observation": 100,
+            "n_observation": 1000,
             "context_dim": 10
         }
 

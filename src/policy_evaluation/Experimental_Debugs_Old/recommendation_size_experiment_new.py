@@ -17,6 +17,7 @@ from sklearn.metrics.pairwise import rbf_kernel, linear_kernel
 import joblib
 import os
 import sys
+from tqdm import tqdm
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
@@ -147,7 +148,7 @@ if __name__ == "__main__":
             "n_users": 50,
             "n_items": 30,
             "n_reco": num_recom,
-            "n_observation": 5000,
+            "n_observation": 1000,
             "context_dim": 10
         }
 
@@ -179,7 +180,9 @@ if __name__ == "__main__":
         )
         compare_df = pd.DataFrame(compare_df)
         compare_df['n_reco'] = num_recom
-        result_df = result_df.append(compare_df, ignore_index=True)
+        # result_df = result_df.append(compare_df, ignore_index=True)
+        result_df = pd.concat([result_df, compare_df], ignore_index=True)
+
 
         # compare_df[list(filter(lambda x: 'error' not in x,compare_df.columns))].plot()
         result_df.to_csv("recommendation_size_report/results/recosize_result_%d.csv" % (num_recom), index=False)

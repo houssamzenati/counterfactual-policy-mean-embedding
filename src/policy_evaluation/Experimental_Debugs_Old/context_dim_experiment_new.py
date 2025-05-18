@@ -107,7 +107,7 @@ def compare_estimators(null_policy, target_policy, environment, item_vectors, co
     Comparing between estimators
     """
     estimators = [IPSEstimator(behavior_estimator, target_policy),
-                  SlateEstimator(config['n_reco'], behavior_estimator),
+                  SlateEstimator(config['n_reco'], null_policy),
                   DirectEstimator(),
                   DoublyRobustEstimator(behavior_estimator, target_policy),
                   CMEbis(rbf_kernel, rbf_kernel, params),
@@ -149,7 +149,7 @@ if __name__ == "__main__":
             "n_users": 50,
             "n_items": 20,
             "n_reco": 4,
-            "n_observation": 5000,
+            "n_observation": 1000,
             "context_dim": context_dim
         }
 
@@ -180,7 +180,8 @@ if __name__ == "__main__":
         )
         compare_df = pd.DataFrame(compare_df)
         compare_df['context_dim'] = context_dim
-        result_df = result_df.append(compare_df, ignore_index=True)
+        # result_df = result_df.append(compare_df, ignore_index=True)
+        result_df = pd.concat([result_df, compare_df], ignore_index=True)
 
         # compare_df[list(filter(lambda x: 'error' not in x,compare_df.columns))].plot()
         result_df.to_csv("context_dim_report/results/contextd_result_%d.csv" % (context_dim), index=False)

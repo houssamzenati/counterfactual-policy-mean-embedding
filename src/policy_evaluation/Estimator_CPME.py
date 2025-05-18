@@ -83,11 +83,12 @@ class DirectEstimator:
 
 
 class DoublyRobustEstimator(Estimator):
-    def __init__(self, behavior_estimator, target_policy, params=(100, 1024, 100)):
+    def __init__(self, behavior_estimator, target_policy, params=(100, 1024, 100), null_propensity_known = False):
         self.behavior_estimator = behavior_estimator
         self.target_policy = target_policy
         self.params = params
         self.model = None
+        self.null_propensity_known = null_propensity_known
 
     @property
     def name(self):
@@ -105,8 +106,10 @@ class DoublyRobustEstimator(Estimator):
         self.model.fit(features, rewards, batch_size=self.params[1], epochs=self.params[2], verbose=0)
 
     def calculate_weight(self, row):
-        logging_prob = self.behavior_estimator.predict_proba(row.null_context_vec, row.null_reco[0])
-        # logging_prob = self.behavior_estimator.get_propensity(row.null_multinomial, row.null_reco)
+        if self.null_propensity_known:
+            logging_prob = self.behavior_estimator.get_propensity(row.null_multinomial, row.null_reco)
+        else:
+            logging_prob = self.behavior_estimator.predict_proba(row.null_context_vec, row.null_reco[0])
         if not self.target_policy.greedy:
             target_prob = self.target_policy.get_propensity(row.target_multinomial, row.null_reco)
         else:
@@ -146,18 +149,22 @@ class DoublyRobustEstimator(Estimator):
 
 
 class IPSEstimator(Estimator):
-    def __init__(self, behavior_estimator, target_policy):
+    def __init__(self, behavior_estimator, target_policy, null_propensity_known = False):
         self.behavior_estimator = behavior_estimator
         self.target_policy = target_policy
+        self.null_propensity_known = null_propensity_known
 
     @property
     def name(self):
         return "ips_estimator"
 
     def calculate_weight(self, row):
-        logging_prob = self.behavior_estimator.predict_proba(row.null_context_vec, row.null_reco[0])
+        if self.null_propensity_known:
+            logging_prob = self.behavior_estimator.get_propensity(row.null_multinomial, row.null_reco)
+        else:
+            logging_prob = self.behavior_estimator.predict_proba(row.null_context_vec, row.null_reco[0])
         if not self.target_policy.greedy:
-            print(row.null_reco)
+            # print(row.null_reco)
             target_prob = self.target_policy.get_propensity(row.target_multinomial, row.null_reco)
         else:
             target_prob = 1.0 if row.null_reco == row.target_reco else 0.0
@@ -261,13 +268,14 @@ class CMEbis(Estimator):
 
 
 class DoublyRobustbis(Estimator):
-    def __init__(self, context_kernel, recom_kernel, params, behavior_estimator, target_policy):
+    def __init__(self, context_kernel, recom_kernel, params, behavior_estimator, target_policy, null_propensity_known = False):
         self.context_kernel = context_kernel
         self.recom_kernel = recom_kernel
         self.behavior_estimator = behavior_estimator
         self.target_policy = target_policy
         self.params = params
         self.model = None
+        self.null_propensity_known = null_propensity_known
 
     @property
     def name(self):
@@ -275,10 +283,13 @@ class DoublyRobustbis(Estimator):
 
 
     def calculate_weight(self, row):
-        logging_prob = self.behavior_estimator.predict_proba(row.null_context_vec, row.null_reco[0])
-        print(self.behavior_estimator)
+        if self.null_propensity_known:
+            logging_prob = self.behavior_estimator.get_propensity(row.null_multinomial, row.null_reco)
+        else:
+            logging_prob = self.behavior_estimator.predict_proba(row.null_context_vec, row.null_reco[0])
+        # print(self.behavior_estimator)
         if not self.target_policy.greedy:
-            print(row.target_multinomial)
+            # print(row.target_multinomial)
             target_prob = self.target_policy.get_propensity(row.target_multinomial, row.null_reco)
         else:
             target_prob = 1.0 if row.null_reco == row.target_reco else 0.0
