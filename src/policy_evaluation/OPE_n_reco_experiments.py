@@ -104,7 +104,7 @@ def simulate_recom_size(n_reco, config, num_iter):
         
         cme_selector = ParameterSelector(estimators[3])  # cme estimator
         # params_grid = [[(10.0 ** p) / config['n_observation'], 1.0, 1.0] for p in np.arange(-7, 0, 1)]
-        params_grid = [[(10.0 ** p), 1.0, 1.0] for p in np.arange(-8, -1, 1)]
+        params_grid = [[(10.0 ** p), 1.0, 1.0] for p in np.arange(-8, -3, 1)]
         cme_selector.select_from_propensity(sim_data, params_grid, logging_policy, target_policy)
         estimators[3] = cme_selector.estimator
         

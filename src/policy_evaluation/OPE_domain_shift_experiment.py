@@ -105,7 +105,7 @@ def simulate_domain_shift(alpha_multiplier, config, num_iter):
         
         cme_selector = ParameterSelector(estimators[3])  # cme estimator
         # params_grid = [[(10.0 ** p) / config['n_observation'], 1.0, 1.0] for p in np.arange(-7, 0, 1)]
-        params_grid = [[(10.0 ** p), 1.0, 1.0] for p in np.arange(-8, -1, 1)]
+        params_grid = [[(10.0 ** p), 1.0, 1.0] for p in np.arange(-8, -3, 1)]
         cme_selector.select_from_propensity(sim_data, params_grid, logging_policy, target_policy)
         estimators[3] = cme_selector.estimator
         
@@ -139,14 +139,14 @@ def simulate_domain_shift(alpha_multiplier, config, num_iter):
     return pd.DataFrame(results)
 
 
-# Running the simulation
-full_results = pd.concat(
-    [simulate_domain_shift(alpha, config, num_iter) for alpha in alpha_multiplier_list]
-)
+# # Running the simulation
+# full_results = pd.concat(
+#     [simulate_domain_shift(alpha, config, num_iter) for alpha in alpha_multiplier_list]
+# )
 
-# full_results = joblib.Parallel(n_jobs=-1, verbose=0)(
-#             joblib.delayed(simulate_domain_shift)(n, config, num_iter) for n in observation_sizes
-#         )
+full_results = joblib.Parallel(n_jobs=5, verbose=50)(
+            joblib.delayed(simulate_domain_shift)(alpha, config, num_iter) for alpha in alpha_multiplier_list
+        )
 
 # Save results
-full_results.to_csv("Results/OPE_domain_shift_result_10iter.csv", index=False)
+full_results.to_csv("Results/OPE_domain_shift_result_10iter_parallel.csv", index=False)
