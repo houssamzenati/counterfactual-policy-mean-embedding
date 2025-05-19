@@ -1,0 +1,233 @@
+=======================
+Loading Anaconda Module...
+=======================
+
+============================== ENVIRONMENT VARIABLES ===============================
+SHELL=/bin/bash
+SLURM_JOB_USER=bbozkurt
+SLURM_TASKS_PER_NODE=1
+SLURM_JOB_UID=801151276
+SLURM_TASK_PID=1500183
+CONDA_EXE=/ceph/apps/ubuntu-20/packages/miniconda/4.9.2/bin/conda
+_CE_M=
+SLURM_JOB_GPUS=1
+SLURM_LOCALID=0
+SLURM_SUBMIT_DIR=/nfs/ghome/live/bbozkurt/Desktop/counterfactual-policy-mean-embedding
+HOSTNAME=gpu-sr670-22
+SLURMD_NODENAME=gpu-sr670-22
+SLURM_JOB_START_TIME=1747649469
+HYDRA_LAUNCHER_EXTRA_ARGS=--external-launcher
+SLURM_CLUSTER_NAME=(null)
+SLURM_JOB_END_TIME=1747735869
+SLURM_CPUS_ON_NODE=2
+SLURM_JOB_CPUS_PER_NODE=2
+SLURM_GPUS_ON_NODE=1
+PRTE_MCA_plm_slurm_args=--external-launcher
+KRB5CCNAME=KEYRING:persistent:801151276
+PWD=/nfs/ghome/live/bbozkurt/Desktop/counterfactual-policy-mean-embedding
+SLURM_GTIDS=0
+LOGNAME=bbozkurt
+XDG_SESSION_TYPE=tty
+CONDA_PREFIX=/nfs/ghome/live/bbozkurt/.conda/envs/tensorenv
+SLURM_JOB_PARTITION=gpu
+__MODULES_LMREFRESH=miniconda/4.9.2
+MODULESHOME=/usr/share/modules
+MANPATH=:/opt/puppetlabs/puppet/share/man
+ROCR_VISIBLE_DEVICES=0
+SLURM_JOB_NUM_NODES=1
+SLURM_JOBID=691818
+SLURM_JOB_QOS=normal
+I_MPI_HYDRA_BOOTSTRAP_EXEC_EXTRA_ARGS=--external-launcher
+HOME=/nfs/ghome/live/bbozkurt
+LANG=C.UTF-8
+SLURM_PROCID=0
+CUDA_DEVICE_ORDER=PCI_BUS_ID
+CONDA_PROMPT_MODIFIER=(tensorenv) 
+TMPDIR=/tmp
+SLURM_NTASKS=1
+SLURM_TOPOLOGY_ADDR=gpu-sr670-22
+SSH_CONNECTION=192.168.238.250 38158 192.168.234.2 22
+ZE_AFFINITY_MASK=0
+HYDRA_BOOTSTRAP=slurm
+SLURM_TOPOLOGY_ADDR_PATTERN=node
+CUDA_VISIBLE_DEVICES=0
+XDG_SESSION_CLASS=user
+SLURM_MEM_PER_NODE=10240
+TERM=xterm-256color
+_CE_CONDA=
+USER=bbozkurt
+SLURM_NODELIST=gpu-sr670-22
+ENVIRONMENT=BATCH
+GPU_DEVICE_ORDINAL=0
+CONDA_SHLVL=1
+XLA_FLAGS=--xla_gpu_cuda_data_dir=/ceph/apps/ubuntu-20/packages/cuda/11.8.0_520.61.05
+LOADEDMODULES=miniconda/4.9.2:cuda/11.8
+SLURM_JOB_ACCOUNT=gcnu-ac
+SLURM_PRIO_PROCESS=0
+SLURM_NPROCS=1
+SHLVL=2
+SLURM_NNODES=1
+XDG_SESSION_ID=29693
+SLURM_SUBMIT_HOST=hpc-gw2
+CONDA_PYTHON_EXE=/ceph/apps/ubuntu-20/packages/miniconda/4.9.2/bin/python
+LD_LIBRARY_PATH=/ceph/apps/ubuntu-20/packages/cuda/11.8.0_520.61.05/lib64
+XDG_RUNTIME_DIR=/run/user/801151276
+SLURM_JOB_ID=691818
+SLURM_NODEID=0
+SSH_CLIENT=192.168.238.250 38158 22
+CONDA_DEFAULT_ENV=tensorenv
+__MODULES_LMINIT=module use --append /etc/environment-modules/modules:module use --append /usr/share/modules/versions:module use --append /usr/share/modules/modulefiles:module use --append /ceph/apps/ubuntu-24/modulefiles
+XDG_DATA_DIRS=/usr/local/share:/usr/share:/var/lib/snapd/desktop
+SLURM_CONF=/etc/slurm/slurm.conf
+PATH=/nfs/ghome/live/bbozkurt/.conda/envs/tensorenv/bin:/ceph/apps/ubuntu-20/packages/cuda/11.8.0_520.61.05/bin:/ceph/apps/ubuntu-20/packages/miniconda/4.9.2/condabin:/ceph/apps/ubuntu-20/packages/miniconda/4.9.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/puppetlabs/bin
+SLURM_JOB_NAME=JupiterNotebook
+MODULEPATH=/etc/environment-modules/modules:/usr/share/modules/versions:/usr/share/modules/modulefiles:/ceph/apps/ubuntu-24/modulefiles
+SLURM_NTASKS_PER_NODE=1
+_LMFILES_=/ceph/apps/ubuntu-24/modulefiles/miniconda/4.9.2:/ceph/apps/ubuntu-24/modulefiles/cuda/11.8
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/801151276/bus
+SSH_TTY=/dev/pts/235
+OMPI_MCA_plm_slurm_args=--external-launcher
+SLURM_JOB_GID=801151276
+OLDPWD=/nfs/ghome/live/bbozkurt
+SLURM_JOB_NODELIST=gpu-sr670-22
+MODULES_CMD=/usr/lib/x86_64-linux-gnu/modulecmd.tcl
+I_MPI_HYDRA_BOOTSTRAP=slurm
+BASH_FUNC_ml%%=() {  module ml "$@"
+}
+BASH_FUNC_module%%=() {  local _mlredir=1;
+ if [ -n "${MODULES_REDIRECT_OUTPUT+x}" ]; then
+ if [ "$MODULES_REDIRECT_OUTPUT" = '0' ]; then
+ _mlredir=0;
+ else
+ if [ "$MODULES_REDIRECT_OUTPUT" = '1' ]; then
+ _mlredir=1;
+ fi;
+ fi;
+ fi;
+ case " $@ " in 
+ *' --no-redirect '*)
+ _mlredir=0
+ ;;
+ *' --redirect '*)
+ _mlredir=1
+ ;;
+ esac;
+ if [ $_mlredir -eq 0 ]; then
+ _module_raw "$@";
+ else
+ _module_raw "$@" 2>&1;
+ fi
+}
+BASH_FUNC__module_raw%%=() {  eval "$(/usr/bin/tclsh8.6 '/usr/lib/x86_64-linux-gnu/modulecmd.tcl' bash "$@")";
+ _mlstatus=$?;
+ return $_mlstatus
+}
+_=/usr/bin/env
+====================================================================================
+
+
+
+====================================================================================
+ For more info and how to connect from windows, 
+
+ Here is the MobaXterm info:
+
+Forwarded port:same as remote port
+Remote server: gpu-sr670-22
+Remote port: 6569
+SSH server: ssh.swc.ucl.ac.uk
+SSH login: bbozkurt
+SSH port: 22
+
+====================================================================================
+ MacOS or linux terminal command to create your ssh tunnel on your local machine:
+
+ssh -N -L 6569:gpu-sr670-22:6569 bbozkurt@ssh.swc.ucl.ac.uk
+====================================================================================
+
+WAIT 1 MINUTE, WILL BE CONNECT ADDRESS APPEARS!
+
+
+[I 2025-05-19 10:11:16.318 ServerApp] jupyter_lsp | extension was successfully linked.
+[I 2025-05-19 10:11:16.328 ServerApp] jupyter_server_terminals | extension was successfully linked.
+[I 2025-05-19 10:11:16.338 ServerApp] jupyterlab | extension was successfully linked.
+[I 2025-05-19 10:11:16.345 ServerApp] notebook | extension was successfully linked.
+[I 2025-05-19 10:11:17.906 ServerApp] notebook_shim | extension was successfully linked.
+[W 2025-05-19 10:11:17.999 ServerApp] WARNING: The Jupyter server is listening on all IP addresses and not using encryption. This is not recommended.
+[I 2025-05-19 10:11:18.001 ServerApp] notebook_shim | extension was successfully loaded.
+[I 2025-05-19 10:11:18.006 ServerApp] jupyter_lsp | extension was successfully loaded.
+[I 2025-05-19 10:11:18.008 ServerApp] jupyter_server_terminals | extension was successfully loaded.
+[I 2025-05-19 10:11:18.027 LabApp] JupyterLab extension loaded from /nfs/ghome/live/bbozkurt/.conda/envs/tensorenv/lib/python3.10/site-packages/jupyterlab
+[I 2025-05-19 10:11:18.027 LabApp] JupyterLab application directory is /nfs/ghome/live/bbozkurt/.conda/envs/tensorenv/share/jupyter/lab
+[I 2025-05-19 10:11:18.028 LabApp] Extension Manager is 'pypi'.
+[I 2025-05-19 10:11:18.176 ServerApp] jupyterlab | extension was successfully loaded.
+[I 2025-05-19 10:11:18.182 ServerApp] notebook | extension was successfully loaded.
+[I 2025-05-19 10:11:18.182 ServerApp] Serving notebooks from local directory: /nfs/ghome/live/bbozkurt/Desktop/counterfactual-policy-mean-embedding
+[I 2025-05-19 10:11:18.182 ServerApp] Jupyter Server 2.16.0 is running at:
+[I 2025-05-19 10:11:18.183 ServerApp] http://localhost:6569/lab?token=595fc6c4b5b1c8aecc6070a047f41462e5030fb5b65d2202
+[I 2025-05-19 10:11:18.183 ServerApp]     http://127.0.0.1:6569/lab?token=595fc6c4b5b1c8aecc6070a047f41462e5030fb5b65d2202
+[I 2025-05-19 10:11:18.183 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 2025-05-19 10:11:18.191 ServerApp] 
+    
+    To access the server, open this file in a browser:
+        file:///nfs/ghome/live/bbozkurt/.local/share/jupyter/runtime/jpserver-1500210-open.html
+    Or copy and paste one of these URLs:
+        http://localhost:6569/lab?token=595fc6c4b5b1c8aecc6070a047f41462e5030fb5b65d2202
+        http://127.0.0.1:6569/lab?token=595fc6c4b5b1c8aecc6070a047f41462e5030fb5b65d2202
+[I 2025-05-19 10:11:18.466 ServerApp] Skipped non-installed server(s): bash-language-server, dockerfile-language-server-nodejs, javascript-typescript-langserver, jedi-language-server, julia-language-server, pyright, python-language-server, python-lsp-server, r-languageserver, sql-language-server, texlab, typescript-language-server, unified-language-server, vscode-css-languageserver-bin, vscode-html-languageserver-bin, vscode-json-languageserver-bin, yaml-language-server
+[W 2025-05-19 10:11:43.948 LabApp] Could not determine jupyterlab build status without nodejs
+[W 2025-05-19 10:11:44.461 ServerApp] 404 GET /api/contents/src/policy_evaluation/Experimental_Debugs_Old/Untitled.ipynb?content=0&hash=0&1747649504441 (045840cf238246da8b43818f3dee7a92@192.168.238.250) 3.02ms referer=http://127.0.0.1:6569/lab
+[W 2025-05-19 10:11:44.461 ServerApp] 404 GET /api/contents/src/policy_evaluation/Experimental_Debugs_Old/Untitled.ipynb?content=0&hash=0&1747649504441 (192.168.238.250): No such file or directory: src/policy_evaluation/Experimental_Debugs_Old/Untitled.ipynb
+[W 2025-05-19 10:11:44.467 ServerApp] 404 GET /api/contents/src/policy_evaluation/Experimental_Debugs_Old/itemsize_experiment_debug-Copy1.ipynb?content=0&hash=0&1747649504442 (045840cf238246da8b43818f3dee7a92@192.168.238.250) 4.95ms referer=http://127.0.0.1:6569/lab
+[W 2025-05-19 10:11:44.467 ServerApp] 404 GET /api/contents/src/policy_evaluation/Experimental_Debugs_Old/itemsize_experiment_debug-Copy1.ipynb?content=0&hash=0&1747649504442 (192.168.238.250): No such file or directory: src/policy_evaluation/Experimental_Debugs_Old/itemsize_experiment_debug-Copy1.ipynb
+[I 2025-05-19 10:11:45.768 ServerApp] Kernel started: dab801ea-d80a-4ef4-bae5-1a863b7a83d2
+[I 2025-05-19 10:11:47.086 ServerApp] Connecting to kernel dab801ea-d80a-4ef4-bae5-1a863b7a83d2.
+[W 2025-05-19 10:11:47.088 ServerApp] The websocket_ping_timeout (90000) cannot be longer than the websocket_ping_interval (30000).
+    Setting websocket_ping_timeout=30000
+[I 2025-05-19 10:11:54.651 ServerApp] Kernel started: 64607273-87ba-484b-8267-91d8890910d4
+[I 2025-05-19 10:11:55.609 ServerApp] Connecting to kernel 64607273-87ba-484b-8267-91d8890910d4.
+[I 2025-05-19 10:11:55.624 ServerApp] Connecting to kernel 64607273-87ba-484b-8267-91d8890910d4.
+[I 2025-05-19 10:11:55.642 ServerApp] Connecting to kernel 64607273-87ba-484b-8267-91d8890910d4.
+[I 2025-05-19 10:11:55.858 ServerApp] Starting buffering for dab801ea-d80a-4ef4-bae5-1a863b7a83d2:3a6b52ec-cf65-4be1-8cd3-8a9f5b90b63d
+[I 2025-05-19 10:11:59.824 ServerApp] Kernel shutdown: dab801ea-d80a-4ef4-bae5-1a863b7a83d2
+[I 2025-05-19 10:11:59.829 ServerApp] Kernel shutdown: 64607273-87ba-484b-8267-91d8890910d4
+[I 2025-05-19 10:12:33.610 ServerApp] Kernel started: 83a10304-f396-460d-a929-c28eb1dc0f6c
+[I 2025-05-19 10:12:34.551 ServerApp] Connecting to kernel 83a10304-f396-460d-a929-c28eb1dc0f6c.
+[I 2025-05-19 10:13:02.011 ServerApp] Kernel restarted: 83a10304-f396-460d-a929-c28eb1dc0f6c
+[I 2025-05-19 10:13:02.023 ServerApp] Starting buffering for 83a10304-f396-460d-a929-c28eb1dc0f6c:2759e122-29d7-4198-a292-695dd5f942fa
+[I 2025-05-19 10:13:02.070 ServerApp] Connecting to kernel 83a10304-f396-460d-a929-c28eb1dc0f6c.
+[I 2025-05-19 10:13:02.070 ServerApp] Restoring connection for 83a10304-f396-460d-a929-c28eb1dc0f6c:2759e122-29d7-4198-a292-695dd5f942fa
+2025-05-19 10:13:08.876526: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2025-05-19 10:13:10.352577: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1747649591.151505 1500306 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1747649591.441539 1500306 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1747649592.497877 1500306 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747649592.497929 1500306 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747649592.497935 1500306 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747649592.497940 1500306 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+2025-05-19 10:13:12.620989: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-05-19 10:13:28.683777: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2025-05-19 10:13:28.683780: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2025-05-19 10:13:28.710404: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2025-05-19 10:13:28.711142: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1747649608.742508 1500338 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1747649608.744812 1500337 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1747649608.752119 1500338 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+E0000 00:00:1747649608.754998 1500337 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1747649608.776355 1500338 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747649608.776435 1500338 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747649608.776463 1500338 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747649608.776490 1500338 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747649608.779575 1500337 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747649608.779641 1500337 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747649608.779667 1500337 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747649608.779691 1500337 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+2025-05-19 10:13:28.783659: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-05-19 10:13:28.786025: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[I 2025-05-19 10:14:15.466 ServerApp] Saving file at /src/policy_evaluation/Experimental_Debugs_Old/number_of_samples_debug.ipynb

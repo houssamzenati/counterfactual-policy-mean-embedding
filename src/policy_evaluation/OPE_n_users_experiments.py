@@ -26,7 +26,7 @@ config = {
     "n_observation": 5000,
 }
 
-num_iter = 15
+num_iter = 10
 # observation_sizes = [100, 1000, 5000]
 # num_items_list = [20, 40, 60, 80]
 # reco_sizes_list = [2, 3, 4, 5, 6, 7]
@@ -149,4 +149,4 @@ full_results = pd.concat(
 #         )
 
 # Save results
-full_results.to_csv("Results/OPE_n_users_result_15iter.csv", index=False)
+full_results.to_csv("Results/OPE_n_users_result_10iter.csv", index=False)

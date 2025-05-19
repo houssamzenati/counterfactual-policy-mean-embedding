@@ -47,7 +47,7 @@ echo "======================="
 echo "Loading Anaconda Module..."
 module load miniconda/4.9.2
 module load cuda/11.8
-source activate torchjax
+source activate tensorenv
 echo "======================="
 
 

@@ -46,7 +46,7 @@
 echo "======================="
 echo "Loading Anaconda Module..."
 module load miniconda/4.9.2
-source activate torchjax_cpu
+source activate tensorenv
 echo "======================="
 
 

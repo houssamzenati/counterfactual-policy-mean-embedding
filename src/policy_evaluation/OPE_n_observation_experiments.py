@@ -26,8 +26,8 @@ config = {
 }
 
 obs_size = 100
-num_iter = 15
-observation_sizes = [100, 1000, 5000, 10000]
+num_iter = 10
+observation_sizes = [100, 1000, 10000]
 
 def simulate_observation_size(obs_size, config, num_iter):
     results = []
@@ -144,7 +144,7 @@ full_results = pd.concat(
 #         )
 
 # Plotting results
-full_results.to_csv("Results/OPE_n_observations_result_15iter.csv", index=False)
+full_results.to_csv("Results/OPE_n_observations_result_10iter.csv", index=False)
 
 # sns.set(style="whitegrid")
 # plt.figure(figsize=(8, 5))
