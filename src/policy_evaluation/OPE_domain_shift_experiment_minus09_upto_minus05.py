@@ -21,19 +21,20 @@ print(tf.config.list_physical_devices('GPU'))
 config = {
     "n_users": 50,
     "n_items": 20,
-    # "context_dim": 10,
-    "n_reco": 4,
-    "n_observation": 5000,
+    "context_dim": 10,
+    "n_reco": 5,
+    "n_observation": 2000,
 }
 
-num_iter = 10
+num_iter = 30
 # observation_sizes = [100, 1000, 5000]
 # num_items_list = [20, 40, 60, 80]
 # reco_sizes_list = [2, 3, 4, 5, 6, 7]
-context_sizes_list = [5, 10, 15, 20, 25, 30]
+# context_sizes_list = [5, 10, 15, 20, 25, 30]
+# alpha_multiplier_list = [-0.9, -0.7, -0.5, -0.3, 0.3, 0.5, 0.7, 0.9]
+alpha_multiplier_list = [-0.9, -0.7, -0.5]
 
-def simulate_context_size(n_context, config, num_iter):
-    config['context_dim'] = n_context
+def simulate_domain_shift(alpha_multiplier, config, num_iter):
     obs_size = config['n_observation']
     results = []
 
@@ -42,7 +43,7 @@ def simulate_context_size(n_context, config, num_iter):
     target_user_vectors = user_vectors * np.random.binomial(1, 0.5, size=user_vectors.shape)
     item_vectors = np.random.normal(0, 1, size=(config["n_items"], config["context_dim"]))
 
-    alpha = -0.3
+    alpha = alpha_multiplier
     logging_user_vectors = alpha * target_user_vectors
 
     logging_policy = MultinomialPolicy(item_vectors, logging_user_vectors, config["n_items"], config["n_reco"], temperature=0.5, cal_gamma=True)
@@ -51,7 +52,7 @@ def simulate_context_size(n_context, config, num_iter):
 
     seeds = np.random.randint(np.iinfo(np.int32).max, size=num_iter)
 
-    for seed in tqdm(seeds, desc=f"Context size {n_context}"):
+    for seed in tqdm(seeds, desc=f"alpha multiplier {alpha_multiplier}"):
         np.random.seed(seed)
 
         # === Generate simulation data ===
@@ -133,7 +134,7 @@ def simulate_context_size(n_context, config, num_iter):
             results.append({
                 "Estimator": estimator.name,
                 "MSE": mse,
-                "context_dim": n_context
+                "alpha_multiplier": alpha_multiplier
             })
 
     return pd.DataFrame(results)
@@ -141,12 +142,12 @@ def simulate_context_size(n_context, config, num_iter):
 
 # Running the simulation
 full_results = pd.concat(
-    [simulate_context_size(n, config, num_iter) for n in context_sizes_list]
+    [simulate_domain_shift(alpha, config, num_iter) for alpha in alpha_multiplier_list]
 )
 
-# full_results = joblib.Parallel(n_jobs=-1, verbose=0)(
-#             joblib.delayed(simulate_context_size)(n, config, num_iter) for n in observation_sizes
+# full_results = joblib.Parallel(n_jobs=5, verbose=50)(
+#             joblib.delayed(simulate_domain_shift)(alpha, config, num_iter) for alpha in alpha_multiplier_list
 #         )
 
 # Save results
-full_results.to_csv("Results/OPE_n_context_result_10iter.csv", index=False)
+full_results.to_csv("Results/OPE_domain_shift_result_minus09_upto_minus05.csv", index=False)

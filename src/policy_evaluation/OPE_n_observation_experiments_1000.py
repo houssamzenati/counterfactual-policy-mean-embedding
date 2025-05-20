@@ -20,19 +20,17 @@ print(tf.config.list_physical_devices('GPU'))
 
 config = {
     "n_users": 50,
-    # "n_items": 20,
+    "n_items": 20,
     "context_dim": 10,
     "n_reco": 5,
-    "n_observation": 2000,
 }
 
-num_iter = 10
-# observation_sizes = [100, 1000, 5000]
-num_items_list = [20, 40, 60, 80]
+obs_size = 100
+num_iter = 30
+# observation_sizes = [100, 1000, 2000, 5000, 10000]
+observation_sizes = [1000]
 
-def simulate_item_size(n_item, config, num_iter):
-    config['n_items'] = n_item
-    obs_size = config['n_observation']
+def simulate_observation_size(obs_size, config, num_iter):
     results = []
 
     # === Generate environment ===
@@ -49,7 +47,7 @@ def simulate_item_size(n_item, config, num_iter):
 
     seeds = np.random.randint(np.iinfo(np.int32).max, size=num_iter)
 
-    for seed in tqdm(seeds, desc=f"Item size {n_item}"):
+    for seed in tqdm(seeds, desc=f"Obs size {obs_size}"):
         np.random.seed(seed)
 
         # === Generate simulation data ===
@@ -131,7 +129,7 @@ def simulate_item_size(n_item, config, num_iter):
             results.append({
                 "Estimator": estimator.name,
                 "MSE": mse,
-                "n_item": n_item
+                "Observation Size": obs_size
             })
 
     return pd.DataFrame(results)
@@ -139,12 +137,22 @@ def simulate_item_size(n_item, config, num_iter):
 
 # Running the simulation
 full_results = pd.concat(
-    [simulate_item_size(n, config, num_iter) for n in num_items_list]
+    [simulate_observation_size(n, config, num_iter) for n in observation_sizes]
 )
 
 # full_results = joblib.Parallel(n_jobs=-1, verbose=0)(
-#             joblib.delayed(simulate_item_size)(n, config, num_iter) for n in observation_sizes
+#             joblib.delayed(simulate_observation_size)(n, config, num_iter) for n in observation_sizes
 #         )
 
-# Save results
-full_results.to_csv("Results/OPE_n_items_result_10iter.csv", index=False)
+# Plotting results
+full_results.to_csv("Results/OPE_n_observations_result_1000_observations.csv", index=False)
+
+# sns.set(style="whitegrid")
+# plt.figure(figsize=(8, 5))
+# sns.lineplot(
+#     data=full_results, x="Observation Size", y="MSE", hue="Estimator", marker="o"
+# )
+# plt.yscale("log")
+# plt.title("Number of Observations vs MSE")
+# plt.tight_layout()
+# plt.show()

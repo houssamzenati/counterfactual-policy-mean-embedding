@@ -22,19 +22,15 @@ config = {
     "n_users": 50,
     "n_items": 20,
     "context_dim": 10,
-    "n_reco": 4,
-    "n_observation": 5000,
+    "n_reco": 5,
 }
 
-num_iter = 10
-# observation_sizes = [100, 1000, 5000]
-# num_items_list = [20, 40, 60, 80]
-# reco_sizes_list = [2, 3, 4, 5, 6, 7]
-# context_sizes_list = [5, 10, 15, 20, 25, 30]
-alpha_multiplier_list = [-0.7, -0.5, -0.3, 0.3, 0.5, 0.7]
+obs_size = 100
+num_iter = 30
+# observation_sizes = [100, 1000, 2000, 5000, 10000]
+observation_sizes = [10000]
 
-def simulate_domain_shift(alpha_multiplier, config, num_iter):
-    obs_size = config['n_observation']
+def simulate_observation_size(obs_size, config, num_iter):
     results = []
 
     # === Generate environment ===
@@ -42,7 +38,7 @@ def simulate_domain_shift(alpha_multiplier, config, num_iter):
     target_user_vectors = user_vectors * np.random.binomial(1, 0.5, size=user_vectors.shape)
     item_vectors = np.random.normal(0, 1, size=(config["n_items"], config["context_dim"]))
 
-    alpha = alpha_multiplier
+    alpha = -0.3
     logging_user_vectors = alpha * target_user_vectors
 
     logging_policy = MultinomialPolicy(item_vectors, logging_user_vectors, config["n_items"], config["n_reco"], temperature=0.5, cal_gamma=True)
@@ -51,7 +47,7 @@ def simulate_domain_shift(alpha_multiplier, config, num_iter):
 
     seeds = np.random.randint(np.iinfo(np.int32).max, size=num_iter)
 
-    for seed in tqdm(seeds, desc=f"alpha multiplier {alpha_multiplier}"):
+    for seed in tqdm(seeds, desc=f"Obs size {obs_size}"):
         np.random.seed(seed)
 
         # === Generate simulation data ===
@@ -133,20 +129,30 @@ def simulate_domain_shift(alpha_multiplier, config, num_iter):
             results.append({
                 "Estimator": estimator.name,
                 "MSE": mse,
-                "alpha_multiplier": alpha_multiplier
+                "Observation Size": obs_size
             })
 
     return pd.DataFrame(results)
 
 
-# # Running the simulation
-# full_results = pd.concat(
-#     [simulate_domain_shift(alpha, config, num_iter) for alpha in alpha_multiplier_list]
+# Running the simulation
+full_results = pd.concat(
+    [simulate_observation_size(n, config, num_iter) for n in observation_sizes]
+)
+
+# full_results = joblib.Parallel(n_jobs=-1, verbose=0)(
+#             joblib.delayed(simulate_observation_size)(n, config, num_iter) for n in observation_sizes
+#         )
+
+# Plotting results
+full_results.to_csv("Results/OPE_n_observations_result_10000_observations.csv", index=False)
+
+# sns.set(style="whitegrid")
+# plt.figure(figsize=(8, 5))
+# sns.lineplot(
+#     data=full_results, x="Observation Size", y="MSE", hue="Estimator", marker="o"
 # )
-
-full_results = joblib.Parallel(n_jobs=5, verbose=50)(
-            joblib.delayed(simulate_domain_shift)(alpha, config, num_iter) for alpha in alpha_multiplier_list
-        )
-
-# Save results
-full_results.to_csv("Results/OPE_domain_shift_result_10iter_parallel.csv", index=False)
+# plt.yscale("log")
+# plt.title("Number of Observations vs MSE")
+# plt.tight_layout()
+# plt.show()

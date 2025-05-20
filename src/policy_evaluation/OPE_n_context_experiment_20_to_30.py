@@ -20,18 +20,21 @@ print(tf.config.list_physical_devices('GPU'))
 
 config = {
     "n_users": 50,
-    # "n_items": 20,
-    "context_dim": 10,
+    "n_items": 20,
+    # "context_dim": 10,
     "n_reco": 5,
     "n_observation": 2000,
 }
 
-num_iter = 10
+num_iter = 30
 # observation_sizes = [100, 1000, 5000]
-num_items_list = [20, 40, 60, 80]
+# num_items_list = [20, 40, 60, 80]
+# reco_sizes_list = [2, 3, 4, 5, 6, 7]
+# context_sizes_list = [5, 10, 15, 20, 25, 30]
+context_sizes_list = [20, 25, 30]
 
-def simulate_item_size(n_item, config, num_iter):
-    config['n_items'] = n_item
+def simulate_context_size(n_context, config, num_iter):
+    config['context_dim'] = n_context
     obs_size = config['n_observation']
     results = []
 
@@ -49,7 +52,7 @@ def simulate_item_size(n_item, config, num_iter):
 
     seeds = np.random.randint(np.iinfo(np.int32).max, size=num_iter)
 
-    for seed in tqdm(seeds, desc=f"Item size {n_item}"):
+    for seed in tqdm(seeds, desc=f"Context size {n_context}"):
         np.random.seed(seed)
 
         # === Generate simulation data ===
@@ -131,7 +134,7 @@ def simulate_item_size(n_item, config, num_iter):
             results.append({
                 "Estimator": estimator.name,
                 "MSE": mse,
-                "n_item": n_item
+                "context_dim": n_context
             })
 
     return pd.DataFrame(results)
@@ -139,12 +142,12 @@ def simulate_item_size(n_item, config, num_iter):
 
 # Running the simulation
 full_results = pd.concat(
-    [simulate_item_size(n, config, num_iter) for n in num_items_list]
+    [simulate_context_size(n, config, num_iter) for n in context_sizes_list]
 )
 
 # full_results = joblib.Parallel(n_jobs=-1, verbose=0)(
-#             joblib.delayed(simulate_item_size)(n, config, num_iter) for n in observation_sizes
+#             joblib.delayed(simulate_context_size)(n, config, num_iter) for n in observation_sizes
 #         )
 
 # Save results
-full_results.to_csv("Results/OPE_n_items_result_10iter.csv", index=False)
+full_results.to_csv("Results/OPE_n_context_result_20_to_30.csv", index=False)
