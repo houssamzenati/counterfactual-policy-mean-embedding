@@ -129,7 +129,7 @@ def generate_ope_data(
     )
 
 
-def make_scenario(scenario_id, d=5, seed=None):
+def make_scenario_continuous(scenario_id, d=5, seed=None):
     """
     Returns:
         - X: covariates
@@ -188,7 +188,23 @@ def make_scenario(scenario_id, d=5, seed=None):
         policy_pi_prime = MixturePolicy(w1, w2)
 
     elif scenario_id == "IV":
+        # Support shift: π′ outputs treatments in opposite direction for half the population
+        # class FlippingPolicy:
+        #     def __init__(self, base_policy):
+        #         self.base = base_policy
 
+        #     def sample_treatments(self, X):
+        #         T = self.base.sample_treatments(X)
+        #         mask = (X[:, 0] > 0).astype(float)
+        #         return T * (1 - 2 * mask)  # flip sign
+
+        #     def get_propensities(self, X, t):
+        #         flipped_t = np.where(X[:, 0] > 0, -t, t)
+        #         return self.base.get_propensities(X, flipped_t)
+
+        # base_pi = GaussianPolicy(w_base)
+        # policy_pi = base_pi
+        # policy_pi_prime = FlippingPolicy(base_pi)
         w1 = w_base + 2 * np.ones(d)
         w2 = w_base
 
@@ -210,6 +226,79 @@ def make_scenario(scenario_id, d=5, seed=None):
 
         policy_pi = GaussianPolicy(w_base)
         policy_pi_prime = MixturePolicy(w1, w2)
+
+    else:
+        raise ValueError(f"Unknown scenario {scenario_id}")
+
+    return X, policy_logging, policy_pi, policy_pi_prime, beta, gamma
+
+
+def make_binary_scenario(scenario_id, d=5, seed=None):
+    if seed is not None:
+        np.random.seed(seed)
+
+    n = 1000
+    X = np.random.normal(0, 1, size=(n, d))
+
+    beta = np.linspace(0.1, 0.5, d)
+    gamma = 1.0
+
+    w_base = np.ones(d) / np.sqrt(d)
+
+    if scenario_id == "I":
+        policy_logging = BernoulliPolicy(w_base)
+        policy_pi = BernoulliPolicy(w_base)
+        policy_pi_prime = BernoulliPolicy(w_base)
+
+    elif scenario_id == "II":
+        shift = np.ones(d)
+        policy_logging = BernoulliPolicy(w_base)
+        policy_pi = BernoulliPolicy(w_base - shift)
+        policy_pi_prime = BernoulliPolicy(w_base + shift)
+
+    elif scenario_id == "III":
+        w1 = w_base + np.ones(d) / 2
+        w2 = w_base - np.ones(d) / 2
+
+        class MixtureBinaryPolicy:
+            def __init__(self, w1, w2):
+                self.p1 = BernoulliPolicy(w1)
+                self.p2 = BernoulliPolicy(w2)
+
+            def sample_treatments(self, X):
+                mask = np.random.binomial(1, 0.5, size=X.shape[0])
+                T1 = self.p1.sample_treatments(X)
+                T2 = self.p2.sample_treatments(X)
+                return mask * T1 + (1 - mask) * T2
+
+            def get_propensities(self, X, t):
+                return 0.5 * self.p1.get_propensities(
+                    X, t
+                ) + 0.5 * self.p2.get_propensities(X, t)
+
+        policy_logging = BernoulliPolicy(w_base)
+        policy_pi = BernoulliPolicy(w_base)
+        policy_pi_prime = MixtureBinaryPolicy(w1, w2)
+
+    elif scenario_id == "IV":
+
+        class FlippingBinaryPolicy:
+            def __init__(self, base_policy):
+                self.base = base_policy
+
+            def sample_treatments(self, X):
+                T = self.base.sample_treatments(X)
+                mask = (X[:, 0] > 0).astype(float)
+                return T * (1 - 2 * mask)
+
+            def get_propensities(self, X, t):
+                flipped_t = np.where(X[:, 0] > 0, -t, t)
+                return self.base.get_propensities(X, flipped_t)
+
+        base_pi = BernoulliPolicy(w_base)
+        policy_logging = base_pi
+        policy_pi = base_pi
+        policy_pi_prime = FlippingBinaryPolicy(base_pi)
 
     else:
         raise ValueError(f"Unknown scenario {scenario_id}")

@@ -1,65 +1,99 @@
 import numpy as np
+from sklearn.kernel_ridge import KernelRidge
+from sklearn.model_selection import GridSearchCV
 
 
-class SyntheticOPEEnvironment:
-    def __init__(self, d=5, seed=0):
-        self.d = d
-        np.random.seed(seed)
-        self.beta = np.linspace(0.1, 0.5, d)
+def uniform_logging_policy(X):
+    return np.full(X.shape[0], 0.5)
 
-    # --- Logging policy (anti-aligned with target) ---
-    def logging_proba(self, X):
-        logits = -2 * (X @ self.beta)
-        return 1 / (1 + np.exp(-logits))  # P(a=1|x)
 
-    def logging_sample(self, X):
-        return np.random.binomial(1, self.logging_proba(X))
+def logistic_logging_policy(X, beta):
+    logits = -2 * (X @ beta)
+    return 1 / (1 + np.exp(-logits))
 
-    # --- Target policy ---
-    def target_proba(self, X):
-        logits = X @ self.beta
-        return 1 / (1 + np.exp(-logits))  # P(a=1|x)
 
-    def target_sample(self, X):
-        return np.random.binomial(1, self.target_proba(X))
+def reward_quadratic(X, A, beta):
+    return (X @ beta) + 2.0 * (A**2) + 0.1 * np.random.randn(len(X))
 
-    # --- Outcome model ---
-    def true_outcome(self, X, A):
-        return (X @ self.beta) + 2.0 * (A**2) + 0.1 * np.random.randn(len(X))
 
-    # --- Unified sampling interface ---
-    def sample(self, n, policy="logging"):
-        X = np.random.randn(n, self.d)
-        if policy == "logging":
-            A = self.logging_sample(X)
-        elif policy == "target":
-            A = self.target_sample(X)
-        else:
-            raise ValueError("Unknown policy: must be 'logging' or 'target'")
-        Y = self.true_outcome(X, A)
-        return X, A, Y
+def reward_nonlinear(X, A, beta):
+    return np.sin(X @ beta) + A * np.cos(X @ beta) + 0.1 * np.random.randn(len(X))
 
-    # --- Importance weight computation ---
-    def importance_weights(self, A, X, eps=1e-8):
-        """
-        Computes importance weights: w = pi(a|x) / pi0(a|x)
-        """
-        p_pi = self.eval_policy("target", A, X)
-        p_pi0 = self.eval_policy("logging", A, X)
 
-        p_pi = np.clip(p_pi, eps, None)
-        p_pi0 = np.clip(p_pi0, eps, None)
+def reward_linear(X, A, beta):
+    return (X @ beta) + A + 0.1 * np.random.randn(len(X))
 
-        return p_pi / p_pi0
 
-    # --- Evaluate pi(a|x) for a given policy ---
-    def eval_policy(self, policy, A, X):
-        A = np.asarray(A)
-        if policy == "logging":
-            p = self.logging_proba(X)
-        elif policy == "target":
-            p = self.target_proba(X)
-        else:
-            raise ValueError("Unknown policy: must be 'logging' or 'target'")
+def gaussian_policy_mean(X, beta):
+    return X @ beta  # mean of Gaussian
 
-        return p * (A == 1) + (1 - p) * (A == 0)
+
+def gaussian_pdf(a, X, beta, scale=0.5):
+    mu = gaussian_policy_mean(X, beta)
+    return (1 / (np.sqrt(2 * np.pi) * scale)) * np.exp(-0.5 * ((a - mu) / scale) ** 2)
+
+
+def find_best_params(
+    X_log, A_log, Y_log, reg_grid=[1e1, 1e0, 0.1, 1e-2, 1e-3, 1e-4], num_cv=3
+):
+    kr = GridSearchCV(
+        KernelRidge(kernel="rbf", gamma=0.1),
+        cv=num_cv,
+        param_grid={"alpha": reg_grid},
+    )
+    features = np.concatenate([X_log, A_log.reshape(-1, 1)], axis=1)
+    kr.fit(features, Y_log)
+    reg_param = kr.best_params_["alpha"]
+    return reg_param
+
+
+def pi0_proba(a, X):
+    """
+    Logging policy: P(a=1|x) = sigmoid(-2 * x · beta), P(a=0|x) = 1 - P(a=1|x)
+    """
+    logits = -2 * (X @ np.linspace(0.1, 0.5, X.shape[1]))
+    probs = 1 / (1 + np.exp(-logits))  # P(a=1 | x)
+    a = np.asarray(a)
+    return probs * (a == 1) + (1 - probs) * (a == 0)
+
+
+def pi_proba(a, X):
+    """
+    Target policy: logistic over X @ beta, returns pi(a|x)
+    """
+    logits = 4 * (X @ np.linspace(0.1, 0.5, X.shape[1]))
+    probs = 1 / (1 + np.exp(-logits))  # P(a=1|x)
+    a = np.asarray(a)
+    return probs * (a == 1) + (1 - probs) * (a == 0)
+
+
+def importance_weights(A, X, pi, pi0, eps=1e-8):
+    """
+    Compute importance weights w = pi(a|x) / pi0(a|x)
+
+    Parameters
+    ----------
+    A : np.ndarray of shape (n,)
+        Actions taken (can be discrete or continuous)
+    X : np.ndarray of shape (n, d)
+        Contexts
+    pi : callable
+        Target policy. Should return pi(a|x) — either probability mass or density.
+    pi0 : callable
+        Logging policy. Same interface as pi.
+    eps : float
+        Clipping constant to avoid division by zero or instability.
+
+    Returns
+    -------
+    w : np.ndarray of shape (n,)
+        Importance sampling weights.
+    """
+    numer = pi(A, X)
+    denom = pi0(A, X)
+
+    # clip to avoid division by zero or exploding weights
+    numer = np.clip(numer, eps, None)
+    denom = np.clip(denom, eps, None)
+
+    return numer / denom
