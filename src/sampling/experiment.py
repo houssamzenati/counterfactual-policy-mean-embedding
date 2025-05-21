@@ -13,8 +13,6 @@ from environment import (
     reward_quadratic,
     reward_linear,
     find_best_params,
-    gaussian_policy_mean,
-    gaussian_pdf,
     importance_weights,
     pi0_proba,
     pi_proba,
@@ -75,7 +73,7 @@ def kernel_herding(Y_support, weights, sigma, num_samples):
     return np.array(samples)
 
 
-def run_experiment(seed, logging_type, reward_type, action_type):
+def run_experiment(seed, logging_type, reward_type):
     rng = np.random.RandomState(seed)
     d = 5
     beta = np.linspace(0.1, 0.5, d)
@@ -93,18 +91,10 @@ def run_experiment(seed, logging_type, reward_type, action_type):
         raise ValueError("Unknown logging policy.")
 
     # Choose action sampling and target policy
-    if action_type == "binary":
-        A_log = rng.binomial(1, probs_log)
-        probs_tgt = 1 / (1 + np.exp(-(X_log @ beta)))
-        A_tgt = rng.binomial(1, probs_tgt)
-        pi_fn = lambda a, X: pi_proba(a, X)
-    elif action_type == "continuous":
-        A_log = gaussian_policy_mean(X_log, beta) + 0.5 * rng.randn(n)
-        A_tgt = gaussian_policy_mean(X_log, beta) + 0.5 * rng.randn(n)
-        pi_fn = lambda a, X: gaussian_pdf(a, X, beta)
-        pi0_fn = lambda a, X: gaussian_pdf(a, X, -2 * beta)
-    else:
-        raise ValueError("Unknown action type")
+    A_log = rng.binomial(1, probs_log)
+    probs_tgt = 1 / (1 + np.exp(-(X_log @ beta)))
+    A_tgt = rng.binomial(1, probs_tgt)
+    pi_fn = lambda a, X: pi_proba(a, X)
 
     # Sample outcomes
     if reward_type == "quadratic":
@@ -138,7 +128,6 @@ def run_experiment(seed, logging_type, reward_type, action_type):
             "seed": seed,
             "logging_type": logging_type,
             "reward_type": reward_type,
-            "action_type": action_type,
             "mmd_unbiased_dr": mmd2_unbiased(Y_dr, Y_tgt, "rbf", sigma),
             "mmd_unbiased_plugin": mmd2_unbiased(Y_plugin, Y_tgt, "rbf", sigma),
             "mmd_biased_dr": mmd2_biased(Y_dr, Y_tgt, "rbf", sigma),
@@ -169,14 +158,12 @@ def run_and_save(
 
 logging_types = ["uniform", "logistic"]
 reward_types = ["quadratic", "nonlinear", "linear"]
-action_types = ["binary"]
 
 jobs = [
-    (log, rew, act)
+    (log, rew)
     for log in logging_types
     for rew in reward_types
-    for act in action_types
 ]
 
 # Run 8 jobs in parallel (1 per configuration, each handling 100 seeds)
-Parallel(n_jobs=8)(delayed(run_and_save)(log, rew, act) for (log, rew, act) in jobs)
+Parallel(n_jobs=8)(delayed(run_and_save)(log, rew) for (log, rew) in jobs)

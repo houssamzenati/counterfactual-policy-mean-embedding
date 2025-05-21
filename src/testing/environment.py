@@ -1,7 +1,8 @@
 from scipy.stats import laplace, bernoulli
 from sklearn.linear_model import LogisticRegression, LinearRegression
 import numpy as np
-
+from sklearn.kernel_ridge import KernelRidge
+from sklearn.model_selection import GridSearchCV
 
 class GaussianPolicy:
     def __init__(self, w, scale=1.0):
@@ -19,42 +20,6 @@ class GaussianPolicy:
         return (1 / (self.scale * np.sqrt(2 * np.pi))) * np.exp(
             -0.5 * ((t - mean) / self.scale) ** 2
         )
-
-
-class LaplacePolicy:
-    def __init__(self, w, scale=0.5):
-        self.w = w
-        self.scale = scale
-
-    def sample_treatments(self, X):
-        return laplace.rvs(loc=self.get_mean(X), scale=self.scale)
-
-    def get_mean(self, X):
-        return X @ self.w
-
-    def get_propensities(self, X, t):
-        mean = self.get_mean(X)
-        return (1 / (2 * self.scale)) * np.exp(-np.abs(t - mean) / self.scale)
-
-
-class BernoulliPolicy:
-    def __init__(self, w):
-        self.w = w
-
-    def sample_treatments(self, X):
-        prob = self.get_probs(X)
-        return 2 * bernoulli.rvs(prob) - 1  # outputs in {-1, +1}
-
-    def get_probs(self, X):
-        return 1 / (1 + np.exp(-(X @ self.w)))
-
-    def get_mean(self, X):
-        return self.get_probs(X)  # expected value of treatment is in [-1, 1]
-
-    def get_propensities(self, X, t):
-        prob = self.get_probs(X)
-        t = ((t + 1) // 2).astype(int)  # map {-1, +1} to {0, 1}
-        return np.where(t == 1, prob, 1 - prob)
 
 
 class EstimatedLoggingPolicy:
@@ -215,3 +180,16 @@ def make_scenario(scenario_id, d=5, seed=None):
         raise ValueError(f"Unknown scenario {scenario_id}")
 
     return X, policy_logging, policy_pi, policy_pi_prime, beta, gamma
+
+def find_best_params(
+    X_log, A_log, Y_log, reg_grid=[1e1, 1e0, 0.1, 1e-2, 1e-3, 1e-4], num_cv=3
+):
+    kr = GridSearchCV(
+        KernelRidge(kernel="rbf", gamma=0.1),
+        cv=num_cv,
+        param_grid={"alpha": reg_grid},
+    )
+    features = np.concatenate([X_log, A_log.reshape(-1, 1)], axis=1)
+    kr.fit(features, Y_log)
+    reg_param = kr.best_params_["alpha"]
+    return reg_param

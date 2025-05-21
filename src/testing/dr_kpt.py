@@ -15,6 +15,7 @@ def xMMD2dr(
     pi_samples,
     pi_prime_samples,
     kernel_function,
+    reg_lambda=1e-2,
     **kwargs
 ):
     """The DR-xKPE^2 statistic."""
@@ -45,7 +46,7 @@ def xMMD2dr(
         metric="rbf",
         gamma=1.0 / sigmaKT,
     )
-    gamma = sigmaKX
+    gamma = reg_lambda
 
     mu_logging = np.linalg.solve(
         np.multiply(KX, KT) + gamma * np.eye(N), np.multiply(KX, KT)
@@ -124,10 +125,7 @@ def xMMD2dr_cross_fit(
         metric="rbf",
         gamma=1.0 / sigmaKT,
     )
-    if reg_lambda:
-        gamma = reg_lambda
-    else:
-        gamma = sigmaKX
+    gamma = reg_lambda
 
     mu_logging_split1 = np.linalg.solve(
         np.multiply(KX[:N2, :N2], KT[:N2, :N2]) + gamma * np.eye(N2),

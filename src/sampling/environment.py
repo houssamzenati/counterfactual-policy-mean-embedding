@@ -24,15 +24,6 @@ def reward_linear(X, A, beta):
     return (X @ beta) + A + 0.1 * np.random.randn(len(X))
 
 
-def gaussian_policy_mean(X, beta):
-    return X @ beta  # mean of Gaussian
-
-
-def gaussian_pdf(a, X, beta, scale=0.5):
-    mu = gaussian_policy_mean(X, beta)
-    return (1 / (np.sqrt(2 * np.pi) * scale)) * np.exp(-0.5 * ((a - mu) / scale) ** 2)
-
-
 def find_best_params(
     X_log, A_log, Y_log, reg_grid=[1e1, 1e0, 0.1, 1e-2, 1e-3, 1e-4], num_cv=3
 ):
