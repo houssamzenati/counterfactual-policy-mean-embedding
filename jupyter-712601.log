@@ -1,0 +1,253 @@
+=======================
+Loading Anaconda Module...
+=======================
+
+============================== ENVIRONMENT VARIABLES ===============================
+SHELL=/bin/bash
+SLURM_JOB_USER=bbozkurt
+SLURM_TASKS_PER_NODE=1
+SLURM_JOB_UID=801151276
+SLURM_TASK_PID=3816387
+CONDA_EXE=/ceph/apps/ubuntu-20/packages/miniconda/4.9.2/bin/conda
+_CE_M=
+SLURM_JOB_GPUS=1
+SLURM_LOCALID=0
+SLURM_SUBMIT_DIR=/nfs/ghome/live/bbozkurt/Desktop/counterfactual-policy-mean-embedding
+HOSTNAME=gpu-350-01
+SLURMD_NODENAME=gpu-350-01
+SLURM_JOB_START_TIME=1747825372
+HYDRA_LAUNCHER_EXTRA_ARGS=--external-launcher
+SLURM_CLUSTER_NAME=(null)
+SLURM_JOB_END_TIME=1747911772
+SLURM_CPUS_ON_NODE=2
+SLURM_JOB_CPUS_PER_NODE=2
+SLURM_GPUS_ON_NODE=1
+PRTE_MCA_plm_slurm_args=--external-launcher
+KRB5CCNAME=KEYRING:persistent:801151276
+PWD=/nfs/ghome/live/bbozkurt/Desktop/counterfactual-policy-mean-embedding
+SLURM_GTIDS=0
+LOGNAME=bbozkurt
+XDG_SESSION_TYPE=tty
+CONDA_PREFIX=/nfs/ghome/live/bbozkurt/.conda/envs/tensorenv
+SLURM_JOB_PARTITION=gpu
+__MODULES_LMREFRESH=miniconda/4.9.2
+MODULESHOME=/usr/share/modules
+MANPATH=:/opt/puppetlabs/puppet/share/man
+ROCR_VISIBLE_DEVICES=0
+SLURM_JOB_NUM_NODES=1
+SLURM_JOBID=712601
+SLURM_JOB_QOS=normal
+I_MPI_HYDRA_BOOTSTRAP_EXEC_EXTRA_ARGS=--external-launcher
+HOME=/nfs/ghome/live/bbozkurt
+LANG=C.UTF-8
+SLURM_PROCID=0
+CUDA_DEVICE_ORDER=PCI_BUS_ID
+CONDA_PROMPT_MODIFIER=(tensorenv) 
+TMPDIR=/tmp
+SLURM_NTASKS=1
+SLURM_TOPOLOGY_ADDR=gpu-350-01
+SSH_CONNECTION=192.168.238.250 56688 192.168.234.2 22
+ZE_AFFINITY_MASK=0
+HYDRA_BOOTSTRAP=slurm
+SLURM_TOPOLOGY_ADDR_PATTERN=node
+CUDA_VISIBLE_DEVICES=0
+XDG_SESSION_CLASS=user
+SLURM_MEM_PER_NODE=10240
+TERM=xterm-256color
+_CE_CONDA=
+USER=bbozkurt
+SLURM_NODELIST=gpu-350-01
+ENVIRONMENT=BATCH
+GPU_DEVICE_ORDINAL=0
+CONDA_SHLVL=1
+XLA_FLAGS=--xla_gpu_cuda_data_dir=/ceph/apps/ubuntu-20/packages/cuda/11.8.0_520.61.05
+LOADEDMODULES=miniconda/4.9.2:cuda/11.8
+SLURM_JOB_ACCOUNT=gcnu-ac
+SLURM_PRIO_PROCESS=0
+SLURM_NPROCS=1
+SHLVL=2
+SLURM_NNODES=1
+XDG_SESSION_ID=30352
+SLURM_SUBMIT_HOST=hpc-gw2
+CONDA_PYTHON_EXE=/ceph/apps/ubuntu-20/packages/miniconda/4.9.2/bin/python
+LD_LIBRARY_PATH=/ceph/apps/ubuntu-20/packages/cuda/11.8.0_520.61.05/lib64
+XDG_RUNTIME_DIR=/run/user/801151276
+SLURM_JOB_ID=712601
+SLURM_NODEID=0
+SSH_CLIENT=192.168.238.250 56688 22
+CONDA_DEFAULT_ENV=tensorenv
+__MODULES_LMINIT=module use --append /etc/environment-modules/modules:module use --append /usr/share/modules/versions:module use --append /usr/share/modules/modulefiles:module use --append /ceph/apps/ubuntu-24/modulefiles
+XDG_DATA_DIRS=/usr/local/share:/usr/share:/var/lib/snapd/desktop
+SLURM_CONF=/etc/slurm/slurm.conf
+PATH=/nfs/ghome/live/bbozkurt/.conda/envs/tensorenv/bin:/ceph/apps/ubuntu-20/packages/cuda/11.8.0_520.61.05/bin:/ceph/apps/ubuntu-20/packages/miniconda/4.9.2/condabin:/ceph/apps/ubuntu-20/packages/miniconda/4.9.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/puppetlabs/bin
+SLURM_JOB_NAME=JupiterNotebook
+MODULEPATH=/etc/environment-modules/modules:/usr/share/modules/versions:/usr/share/modules/modulefiles:/ceph/apps/ubuntu-24/modulefiles
+SLURM_NTASKS_PER_NODE=1
+_LMFILES_=/ceph/apps/ubuntu-24/modulefiles/miniconda/4.9.2:/ceph/apps/ubuntu-24/modulefiles/cuda/11.8
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/801151276/bus
+SSH_TTY=/dev/pts/261
+OMPI_MCA_plm_slurm_args=--external-launcher
+SLURM_JOB_GID=801151276
+OLDPWD=/nfs/ghome/live/bbozkurt/Desktop/counterfactual-policy-mean-embedding/src
+SLURM_JOB_NODELIST=gpu-350-01
+MODULES_CMD=/usr/lib/x86_64-linux-gnu/modulecmd.tcl
+I_MPI_HYDRA_BOOTSTRAP=slurm
+BASH_FUNC_ml%%=() {  module ml "$@"
+}
+BASH_FUNC_module%%=() {  local _mlredir=1;
+ if [ -n "${MODULES_REDIRECT_OUTPUT+x}" ]; then
+ if [ "$MODULES_REDIRECT_OUTPUT" = '0' ]; then
+ _mlredir=0;
+ else
+ if [ "$MODULES_REDIRECT_OUTPUT" = '1' ]; then
+ _mlredir=1;
+ fi;
+ fi;
+ fi;
+ case " $@ " in 
+ *' --no-redirect '*)
+ _mlredir=0
+ ;;
+ *' --redirect '*)
+ _mlredir=1
+ ;;
+ esac;
+ if [ $_mlredir -eq 0 ]; then
+ _module_raw "$@";
+ else
+ _module_raw "$@" 2>&1;
+ fi
+}
+BASH_FUNC__module_raw%%=() {  eval "$(/usr/bin/tclsh8.6 '/usr/lib/x86_64-linux-gnu/modulecmd.tcl' bash "$@")";
+ _mlstatus=$?;
+ return $_mlstatus
+}
+_=/usr/bin/env
+====================================================================================
+
+
+
+====================================================================================
+ For more info and how to connect from windows, 
+
+ Here is the MobaXterm info:
+
+Forwarded port:same as remote port
+Remote server: gpu-350-01
+Remote port: 6027
+SSH server: ssh.swc.ucl.ac.uk
+SSH login: bbozkurt
+SSH port: 22
+
+====================================================================================
+ MacOS or linux terminal command to create your ssh tunnel on your local machine:
+
+ssh -N -L 6027:gpu-350-01:6027 bbozkurt@ssh.swc.ucl.ac.uk
+====================================================================================
+
+WAIT 1 MINUTE, WILL BE CONNECT ADDRESS APPEARS!
+
+
+[I 2025-05-21 11:03:00.061 ServerApp] jupyter_lsp | extension was successfully linked.
+[I 2025-05-21 11:03:00.075 ServerApp] jupyter_server_terminals | extension was successfully linked.
+[I 2025-05-21 11:03:00.089 ServerApp] jupyterlab | extension was successfully linked.
+[I 2025-05-21 11:03:00.103 ServerApp] notebook | extension was successfully linked.
+[I 2025-05-21 11:03:01.487 ServerApp] notebook_shim | extension was successfully linked.
+[W 2025-05-21 11:03:01.575 ServerApp] WARNING: The Jupyter server is listening on all IP addresses and not using encryption. This is not recommended.
+[I 2025-05-21 11:03:01.576 ServerApp] notebook_shim | extension was successfully loaded.
+[I 2025-05-21 11:03:01.580 ServerApp] jupyter_lsp | extension was successfully loaded.
+[I 2025-05-21 11:03:01.583 ServerApp] jupyter_server_terminals | extension was successfully loaded.
+[I 2025-05-21 11:03:01.607 LabApp] JupyterLab extension loaded from /nfs/ghome/live/bbozkurt/.conda/envs/tensorenv/lib/python3.10/site-packages/jupyterlab
+[I 2025-05-21 11:03:01.608 LabApp] JupyterLab application directory is /nfs/ghome/live/bbozkurt/.conda/envs/tensorenv/share/jupyter/lab
+[I 2025-05-21 11:03:01.609 LabApp] Extension Manager is 'pypi'.
+[I 2025-05-21 11:03:01.786 ServerApp] jupyterlab | extension was successfully loaded.
+[I 2025-05-21 11:03:01.794 ServerApp] notebook | extension was successfully loaded.
+[I 2025-05-21 11:03:01.795 ServerApp] Serving notebooks from local directory: /nfs/ghome/live/bbozkurt/Desktop/counterfactual-policy-mean-embedding
+[I 2025-05-21 11:03:01.795 ServerApp] Jupyter Server 2.16.0 is running at:
+[I 2025-05-21 11:03:01.795 ServerApp] http://localhost:6027/lab?token=8b3713dd72435e2706a90d77b74604534641dc3605eec736
+[I 2025-05-21 11:03:01.795 ServerApp]     http://127.0.0.1:6027/lab?token=8b3713dd72435e2706a90d77b74604534641dc3605eec736
+[I 2025-05-21 11:03:01.795 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 2025-05-21 11:03:01.805 ServerApp] 
+    
+    To access the server, open this file in a browser:
+        file:///nfs/ghome/live/bbozkurt/.local/share/jupyter/runtime/jpserver-3816412-open.html
+    Or copy and paste one of these URLs:
+        http://localhost:6027/lab?token=8b3713dd72435e2706a90d77b74604534641dc3605eec736
+        http://127.0.0.1:6027/lab?token=8b3713dd72435e2706a90d77b74604534641dc3605eec736
+[I 2025-05-21 11:03:02.180 ServerApp] Skipped non-installed server(s): bash-language-server, dockerfile-language-server-nodejs, javascript-typescript-langserver, jedi-language-server, julia-language-server, pyright, python-language-server, python-lsp-server, r-languageserver, sql-language-server, texlab, typescript-language-server, unified-language-server, vscode-css-languageserver-bin, vscode-html-languageserver-bin, vscode-json-languageserver-bin, yaml-language-server
+[W 2025-05-21 11:03:16.513 LabApp] Could not determine jupyterlab build status without nodejs
+[W 2025-05-21 11:03:17.943 ServerApp] Notebook src/policy_evaluation/Experimental_Debugs_Old/MWE.ipynb is not trusted
+[I 2025-05-21 11:03:18.630 ServerApp] Kernel started: 600d1962-7e20-4c59-bf3c-a1a646035058
+[I 2025-05-21 11:03:18.676 ServerApp] Kernel started: 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7
+[I 2025-05-21 11:03:20.951 ServerApp] Connecting to kernel 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7.
+[W 2025-05-21 11:03:20.954 ServerApp] The websocket_ping_timeout (90000) cannot be longer than the websocket_ping_interval (30000).
+    Setting websocket_ping_timeout=30000
+[I 2025-05-21 11:03:21.018 ServerApp] Connecting to kernel 600d1962-7e20-4c59-bf3c-a1a646035058.
+[I 2025-05-21 11:03:29.040 ServerApp] Connecting to kernel 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7.
+[I 2025-05-21 11:05:18.646 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results.ipynb
+[I 2025-05-21 11:06:26.991 ServerApp] Copying 'src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb' to '/src/policy_evaluation'
+[I 2025-05-21 11:54:39.454 ServerApp] Kernel restarted: 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7
+[I 2025-05-21 11:54:39.488 ServerApp] Starting buffering for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 11:54:39.794 ServerApp] Connecting to kernel 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7.
+[I 2025-05-21 11:54:39.794 ServerApp] Restoring connection for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 11:56:36.345 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 13:17:05.669 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 13:18:58.522 ServerApp] Kernel restarted: 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7
+[I 2025-05-21 13:18:58.576 ServerApp] Starting buffering for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 13:18:58.607 ServerApp] Connecting to kernel 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7.
+[I 2025-05-21 13:18:58.607 ServerApp] Restoring connection for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 13:19:05.883 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 13:19:31.699 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 15:31:36.459 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[W 2025-05-21 15:31:41.111 ServerApp] Notebook src/policy_evaluation/debug-Copy1.ipynb is not trusted
+[I 2025-05-21 15:31:42.733 ServerApp] Kernel started: 3f09da4b-0acc-4d25-be66-bd9b7fe9484f
+[I 2025-05-21 15:31:44.444 ServerApp] Connecting to kernel 3f09da4b-0acc-4d25-be66-bd9b7fe9484f.
+[I 2025-05-21 15:35:37.334 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 15:40:47.635 ServerApp] Kernel started: 41ef50b4-3964-41a6-b71f-dc34ef2e954a
+[I 2025-05-21 15:40:49.543 ServerApp] Connecting to kernel 41ef50b4-3964-41a6-b71f-dc34ef2e954a.
+[I 2025-05-21 15:41:39.670 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 15:42:48.777 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Unknown_Propensities.ipynb
+[I 2025-05-21 15:43:40.210 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 15:44:51.588 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Unknown_Propensities.ipynb
+[I 2025-05-21 15:45:40.708 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 15:46:52.238 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Unknown_Propensities.ipynb
+[I 2025-05-21 15:47:41.264 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 15:49:41.695 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 15:51:18.453 ServerApp] Kernel restarted: 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7
+[I 2025-05-21 15:51:18.468 ServerApp] Starting buffering for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 15:51:18.601 ServerApp] Connecting to kernel 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7.
+[I 2025-05-21 15:51:18.601 ServerApp] Restoring connection for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 15:51:42.384 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 15:53:42.804 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 15:55:43.195 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 15:57:43.614 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 15:59:44.291 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 16:01:45.038 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 16:03:45.537 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 16:05:47.237 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 16:45:03.382 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 16:47:04.235 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 16:47:08.327 ServerApp] Kernel restarted: 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7
+[I 2025-05-21 16:47:08.420 ServerApp] Starting buffering for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 16:47:08.466 ServerApp] Connecting to kernel 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7.
+[I 2025-05-21 16:47:08.467 ServerApp] Restoring connection for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 16:47:48.982 ServerApp] Kernel restarted: 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7
+[I 2025-05-21 16:47:49.009 ServerApp] Starting buffering for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 16:47:49.043 ServerApp] Connecting to kernel 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7.
+[I 2025-05-21 16:47:49.043 ServerApp] Restoring connection for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 16:49:05.434 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 17:26:12.780 ServerApp] Kernel restarted: 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7
+[I 2025-05-21 17:26:12.831 ServerApp] Starting buffering for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 17:26:12.846 ServerApp] Connecting to kernel 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7.
+[I 2025-05-21 17:26:12.846 ServerApp] Restoring connection for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 17:26:36.710 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 17:27:29.134 ServerApp] Kernel restarted: 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7
+[I 2025-05-21 17:27:29.189 ServerApp] Starting buffering for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 17:27:29.233 ServerApp] Connecting to kernel 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7.
+[I 2025-05-21 17:27:29.234 ServerApp] Restoring connection for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 17:27:58.613 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
+[I 2025-05-21 17:34:14.451 ServerApp] Kernel restarted: 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7
+[I 2025-05-21 17:34:14.639 ServerApp] Starting buffering for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 17:34:14.875 ServerApp] Connecting to kernel 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7.
+[I 2025-05-21 17:34:14.875 ServerApp] Restoring connection for 5f3f3b05-7b2a-4c88-8dfd-a46aba423fc7:57bae4b6-9577-4707-9d25-6f17ae5fa879
+[I 2025-05-21 17:36:04.033 ServerApp] Saving file at /src/policy_evaluation/Plot_Simulation_Results_Known_Propensities.ipynb
