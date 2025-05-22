@@ -11,7 +11,6 @@ from environment import (
     logistic_logging_policy,
     reward_nonlinear,
     reward_quadratic,
-    reward_linear,
     find_best_params,
     importance_weights,
     pi0_proba,
@@ -103,9 +102,6 @@ def run_experiment(seed, logging_type, reward_type):
     elif reward_type == "nonlinear":
         Y_log = reward_nonlinear(X_log, A_log, beta)
         Y_tgt = reward_nonlinear(X_log, A_tgt, beta)
-    elif reward_type == "linear":
-        Y_log = reward_linear(X_log, A_log, beta)
-        Y_tgt = reward_linear(X_log, A_tgt, beta)
     else:
         raise ValueError("Unknown reward type")
 
@@ -153,7 +149,7 @@ def run_and_save(logging_type, reward_type, output_dir="results", nb_seeds=100):
 
 
 logging_types = ["uniform", "logistic"]
-reward_types = ["quadratic", "nonlinear", "linear"]
+reward_types = ["quadratic", "nonlinear"]
 
 jobs = [(log, rew) for log in logging_types for rew in reward_types]
 

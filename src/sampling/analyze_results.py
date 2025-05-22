@@ -13,15 +13,12 @@ def load_all_results(results_dir="results"):
     return pd.DataFrame(records)
 
 
-def make_metric_table(df, action_type, metric_base):
+def make_metric_table(df, metric_base):
     """
     Build a summary table for a given metric (e.g. 'mmd_unbiased', 'mmd_biased', or 'wass'),
     restricted to reward types 'nonlinear' and 'quadratic'.
     """
-    df = df[
-        (df["action_type"] == action_type)
-        & (df["reward_type"].isin(["nonlinear", "quadratic"]))
-    ]
+    df = df[df["reward_type"].isin(["nonlinear", "quadratic"])]
     methods = ["plugin", "dr"]
 
     rows = []
@@ -55,12 +52,11 @@ def save_csv_table(df, filename):
 
 if __name__ == "__main__":
     df = load_all_results("results")
-    action_type = "binary"  # or "continuous" if you wish
 
     for metric in ["mmd_unbiased", "mmd_biased", "wass"]:
-        table = make_metric_table(df, action_type, metric)
+        table = make_metric_table(df, metric)
         print(f"\n=== {metric.upper()} ===")
         print(table.to_string(index=False))
-
-        save_latex_table(table, f"tables/results_summary_{metric}_{action_type}.tex")
-        save_csv_table(table, f"tables/results_summary_{metric}_{action_type}.csv")
+        os.makedirs(os.path.dirname("tables/"), exist_ok=True)
+        save_latex_table(table, f"tables/results_summary_{metric}.tex")
+        save_csv_table(table, f"tables/results_summary_{metric}.csv")
