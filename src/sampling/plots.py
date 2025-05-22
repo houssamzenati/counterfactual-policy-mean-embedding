@@ -38,7 +38,7 @@ def plot_herding_vs_true(
     plt.tight_layout()
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path, bbox_inches="tight")
-    plt.show()
+    # plt.show()
 
 
 _, Y_plugin, Y_dr, Y_log, Y_tgt = run_experiment(42, "logistic", "nonlinear")
@@ -48,15 +48,15 @@ plot_herding_vs_true(
 
 _, Y_plugin, Y_dr, Y_log, Y_tgt = run_experiment(42, "logistic", "quadratic")
 plot_herding_vs_true(
-    Y_log, Y_tgt, Y_dr, Y_plugin, save_path="plots/logistic_nonlinear_histogram.png"
+    Y_log, Y_tgt, Y_dr, Y_plugin, save_path="plots/logistic_quadratic_histogram.png"
 )
 
 _, Y_plugin, Y_dr, Y_log, Y_tgt = run_experiment(42, "uniform", "nonlinear")
 plot_herding_vs_true(
-    Y_log, Y_tgt, Y_dr, Y_plugin, save_path="plots/logistic_nonlinear_histogram.png"
+    Y_log, Y_tgt, Y_dr, Y_plugin, save_path="plots/uniform_nonlinear_histogram.png"
 )
 
 _, Y_plugin, Y_dr, Y_log, Y_tgt = run_experiment(42, "uniform", "quadratic")
 plot_herding_vs_true(
-    Y_log, Y_tgt, Y_dr, Y_plugin, save_path="plots/logistic_nonlinear_histogram.png"
+    Y_log, Y_tgt, Y_dr, Y_plugin, save_path="plots/uniform_quadratic_histogram.png"
 )
