@@ -27,11 +27,6 @@ config = {
 }
 
 num_iter = 30
-# observation_sizes = [100, 1000, 5000]
-# num_items_list = [20, 40, 60, 80]
-# reco_sizes_list = [2, 3, 4, 5, 6, 7]
-# context_sizes_list = [5, 10, 15, 20, 25, 30]
-# alpha_multiplier_list = [-0.9, -0.7, -0.5, -0.3, 0.3, 0.5, 0.7, 0.9]
 alpha_multiplier_list = [0.7, 0.9]
 
 def simulate_domain_shift(alpha_multiplier, config, num_iter):
@@ -90,8 +85,6 @@ def simulate_domain_shift(alpha_multiplier, config, num_iter):
             IPSEstimator(logging_policy, target_policy, null_propensity_known = True),
             DirectEstimator(),
             DoublyRobustEstimator(logging_policy, target_policy, null_propensity_known = True),
-            # CMEstimator(rbf_kernel, rbf_kernel, params=[5e-5, 1.0, 1.0]),
-            # DRCMEstimator(rbf_kernel, rbf_kernel, [1e-3, 1.0, 1.0], logging_policy, target_policy), 
             CMEbis(rbf_kernel, rbf_kernel, params=[5e-5, 1.0, 1.0]),
             DoublyRobustbis(rbf_kernel, rbf_kernel, [5e-5, 1.0, 1.0], logging_policy, target_policy, null_propensity_known = True)
         ]
@@ -105,7 +98,6 @@ def simulate_domain_shift(alpha_multiplier, config, num_iter):
         estimators[2].params = direct_selector.parameters  # doubly robust estimator
         
         cme_selector = ParameterSelector(estimators[3])  # cme estimator
-        # params_grid = [[(10.0 ** p) / config['n_observation'], 1.0, 1.0] for p in np.arange(-7, 0, 1)]
         params_grid = [[(10.0 ** p), 1.0, 1.0] for p in np.arange(-8, -3, 1)]
         cme_selector.select_from_propensity(sim_data, params_grid, logging_policy, target_policy)
         estimators[3] = cme_selector.estimator

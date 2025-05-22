@@ -154,4 +154,4 @@ reward_types = ["quadratic", "nonlinear"]
 jobs = [(log, rew) for log in logging_types for rew in reward_types]
 
 # Run 8 jobs in parallel (1 per configuration, each handling 100 seeds)
-Parallel(n_jobs=8)(delayed(run_and_save)(log, rew) for (log, rew) in jobs)
+# Parallel(n_jobs=8)(delayed(run_and_save)(log, rew) for (log, rew) in jobs)
