@@ -1,4 +1,0 @@
-Scenario,N=50 ATE Power (Linear Kernel),N=100 ATE Power (Linear Kernel),N=200 ATE Power (Linear Kernel),N=50 DTE Power (RBF Kernel),N=100 DTE Power (RBF Kernel),N=200 DTE Power (RBF Kernel)
-Scenario i) No Treatment Effect,0.0,0.0,0.0,0.0,0.0,0.0
-Scenario ii) Mean Shift Effect,0.0,0.0,0.0,0.0,0.0,0.0
-Scenario iii) High-Order Treatment Effect,0.0,0.0,0.0,0.33,0.735,1.0
